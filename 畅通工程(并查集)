@@ -1,0 +1,84 @@
+/*畅通工程*/
+/*题目地址：http://ac.jobdu.com/problem.php?pid=1012*/
+/*****************************
+利用并查集思想求解。
+	初始将每个城镇看作一个组别，组别的编号与城镇编号相同。输入路径后，先查询起始点start和end的组别号，若start的组别号与end相同，则说明他俩已经在一个组别不用划分，否则划分为一个组。具体操作如下：
+数据结构：
+	town_id表示城镇的编号，town_group表示城镇的组别号，例如初始1号城镇和2号城镇初始时不在一个组别，那么1.town_group为1，2.town_group为2,若要将他俩划分到一个组，那么那么将2赋值到1.town_group，表示1号城镇和1.town_group中所存储的2号城镇为一组，
+再去查找2号中的town_grop， 2.town_group与2.town_id相同，都是2，则说明1号城镇的组别号是2
+*****************************/
+#include <iostream>
+#include <vector>
+
+using namespace std;
+struct town
+{
+	int town_id;
+	int town_group;
+};
+int Find_Group(vector<town> &data,int x);
+int main()
+{
+	int town_num,road_num;
+	while((cin >> town_num)&&(town_num))
+	{
+		cin >> road_num;
+
+		vector<town> data;
+		data.resize(town_num+1);	//城镇编号从1开始
+
+		//初始化城镇id和组别号
+		for(int i=1;i<data.size();++i)
+		{
+			data[i].town_id = i;
+			data[i].town_group = i;
+		}
+
+		int road_start=0,road_end=0;
+		int start_group=0,end_group=0;
+		while(road_num--)
+		{
+			cin >> road_start >> road_end;
+			start_group=Find_Group(data,road_start);	//查找道路起始点城镇的组别号
+			end_group=Find_Group(data,road_end);		//查找道路终止点城镇的组别号
+			if(start_group != end_group)				//如果起始点城镇和终止点城镇不再一个组中
+			{
+				data[start_group].town_group=road_end;	//将他们标记进一个组中
+			}
+		}
+
+		vector<bool> group_exit;
+		group_exit.resize(town_num+1);
+
+		for(int i=1;i<group_exit.size();++i)	
+		{
+			group_exit[i] = false;
+		}
+
+		for(int i=1;i<data.size();++i)				//将每个组别所对应的标志位置true
+		{
+			group_exit[Find_Group(data,i)] = true;
+		}
+
+		int group_num=0;
+		for(int i=1;i<group_exit.size();++i)		//统计标记数组中true的个数，得到总共有多少个组别
+		{
+			if(group_exit[i])
+			{
+				++group_num;
+			}
+		}
+
+		cout << group_num-1 << endl;					//因此需要修的道路数量为总共的组别数减一
+	}
+	return 0;
+}
+
+int Find_Group(vector<town> &data,int x)			//查找一个城镇的组别号
+{
+	if(data[x].town_group == data[x].town_id)		//若town_group==town_id，则组别号就是town_id
+		return data[x].town_group;
+	while(data[x].town_group != data[x].town_id)	//若不相等，则根据town_group中与它相同的城镇id进行查找，直到查找到town_group==town_id的城镇，其town_id就是该城镇的组别号
+		x = data[x].town_group;
+	return data[x].town_group;
+}
