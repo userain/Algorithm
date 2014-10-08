@@ -1,0 +1,79 @@
+/*寻找k个最小元素*/
+/*********************
+利用快速排序分治法的思想，将输入的序列按照第一个元素分割为两个部分，前半部分小于基准元素，后半部分大于基准元素，
+情况1：若要找寻的最小元素个数k刚好等于前半部分个数，则输出前半部分，结束。
+情况2：若要寻找的最小元素个数k刚好等于前半部分个数加一，则输出前半部分和基准元素，结束。
+情况3：若要寻找的最小元素个数k小于前半部分元素个数，则递归进入下一层，将前半部分再进行划分。
+情况4：若要寻找的最小元素个数k大于前半部分的个数加一，则先输出前半部分元素和基准元素，再递归进入下一层，对最后半部分进行划分，寻找其中的剩余个数最小元素
+*********************/
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector<int> data;
+void quick_select(int start,int end,int k);
+int main()
+{
+	
+
+	int temp;
+	while((cin>>temp)&&(temp!=0))			//输入数据
+		data.push_back(temp);
+
+	quick_select(0,data.size()-1,3);			//快速查找
+	return 0;
+}
+
+void quick_select(int start,int end,int k)
+{
+	if(k<=0)
+		return;
+	if(end<start)
+		return;
+
+//根据第一个元素划分剩余元素
+	int basic_element = data[start];
+	int i=start,j=start,temp=0;
+	for(j=start+1;j<=end;++j)
+	{
+		if(data[j]<=basic_element)
+		{
+			temp = data[i];
+			data[i]=data[j];
+			data[j] = temp;
+			++i;
+		}
+	}
+//若全部元素都大于基准元素，则i在原位置不变，则不用再调整基准元素位置
+	if(i!=start)
+	{
+		temp = data[i-1];
+		data[i-1] = data[start];
+		data[start] = temp;
+	}
+
+//开始寻找最小k个元素
+	if(k<(i-start))						//情况三
+	{
+		quick_select(start,i-1,k);		
+	}
+	else if(k==(i-start))				//情况一
+	{
+		for(int m = start; m<i;++m)
+			cout << data[m] << " ";
+	}
+	else if(k==(i-start+1))				//情况二
+	{
+		for(int m = start; m<=i;++m)
+			cout << data[m] << " ";
+	}
+	else								//情况四
+	{
+		for(int m = start; m<=i;++m)
+			cout << data[m] << " ";
+		quick_select(i+1,end,k-(i-start+1));
+	}
+
+
+}
