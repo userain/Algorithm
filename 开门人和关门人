@@ -1,0 +1,51 @@
+/*开门人和关门人*/
+//题目地址：http://ac.jobdu.com/problem.php?pid=1013
+#include <iostream>
+#include <vector>
+#include <string>
+#include <sstream>
+
+using namespace std;
+
+double Time2Number(string time);
+int main()
+{
+	int days;
+	cin >> days;
+	while(days--)
+	{
+		int iterm_num;
+		cin >> iterm_num;
+		
+		string open_id,close_id;
+		string open_time="24:60:60",close_time="00:00:00";
+		string temp_id,temp_open_time,temp_close_time;
+		while(iterm_num--)
+		{
+			cin >> temp_id >> temp_open_time >> temp_close_time;
+			if(Time2Number(temp_open_time)<Time2Number(open_time))	//比较，若输入的签到时间比目前最早签到时间还早，则更新
+			{
+				open_time = temp_open_time;
+				open_id = temp_id;
+			}
+			if(Time2Number(temp_close_time)>Time2Number(close_time))////比较，若输入的离开时间比目前最晚的离开时间还晚，则更新
+			{
+				close_time = temp_close_time;
+				close_id = temp_id;
+			}
+		}
+
+		cout << open_id <<" " <<close_id<<endl;
+	}
+	return 0;
+}
+//时间转换为数字函数
+double Time2Number(string time)
+{
+	double temp;
+	while(time.find(":")==0)
+		time.erase(time.find(":"));
+	stringstream s(time);
+	s >> temp;
+	return temp;
+}
