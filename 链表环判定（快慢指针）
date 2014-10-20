@@ -1,0 +1,42 @@
+//题目链接：https://oj.leetcode.com/problems/linked-list-cycle/
+//思路：利用快慢指针的思想，从头开，p1指针每次向后移动一个节点，p2指针每次向后移动两个节点，若p1和p2在移动过程中到了链表尾部，
+//      则不再移，直到最p1和p2相等，若他俩都是NULL,则表示链表中没有环，若不是NULL，则表示两个指针在中间相遇，证明其中有环。
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution 
+{
+public:
+       bool hasCycle(ListNode *head) 
+    {
+        if(head==NULL)          //若链表为空，则无环  
+            return false;
+        
+        ListNode *p1,*p2;
+        p1 = head;          
+        p2 = head->next;
+        
+        while(p1 != p2)         //p1，p2相等时跳出循环
+        {
+            if(p1 == NULL)      //p1若到链表尾部，则不再后移
+                p1 = p1;
+            else            
+                p1 = p1->next;  //p1若没到尾部，则后移一个节点
+            if(p2 == NULL)      //p2若到链表尾部，则不再后移
+                p2 = p2;
+            else if(p2->next == NULL)//p2若下一个节点就是尾部，则只移动一个节点
+                p2 = p2->next;
+            else
+                p2 = p2->next->next;//否则移动两个节点
+        }
+        if(p1 == NULL)      //若p1，p2在尾部相遇，则无环
+            return false;
+        else
+            return true;    //若p1，p2在中间相遇，则有环
+    }
+};
