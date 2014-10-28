@@ -1,0 +1,71 @@
+//题目链接：https://oj.leetcode.com/problems/substring-with-concatenation-of-all-words/
+//题目大意：给出一个原始字符串s，和一个字符串列表l，从s中查找子串，该子串中l中所有字符串出现且仅出现一次，返回子串首地址，若有多个，返回多个。
+//思路：利用STL中map，words记录l列表中每个字符串出现的次数（这是因为会有重复的字符串出现在l中），利用cur记录查找过程中该子串的出现次数。
+// 以i为开始位置，向后查找i+l.size()*l[0].size个长度，具体见程序注释  
+#include <iostream>
+#include <map>
+#include <vector>
+#include <string>
+
+using namespace std;
+vector<int> findSubstring(string S, vector<string> &L);
+int main()
+{
+	string str;
+	cin >> str;
+
+	vector<string> temp_vec_str;
+	string temp_str;
+	cin >> temp_str;
+	while(temp_str!="-1")
+	{
+		temp_vec_str.push_back(temp_str);
+		cin >> temp_str;
+	}
+	vector<int> result;
+	result= findSubstring(str, temp_vec_str);
+	for(auto i=result.begin();i!=result.end();++i)
+		cout<<*i<<endl;
+	return 0;
+}
+vector<int>  findSubstring(string S, vector<string> &L)
+{
+	vector<int> result;
+	if(S.empty()||L.empty())
+		return result;
+	int s_len = S.size();
+	int wordnum = L.size();
+
+	map<string,int> words;
+	map<string,int> cur;
+	for(int i=0; i<wordnum; ++i)
+	{
+		words[L[i]]++;    //由于l会出现重复字符串，因此必须记录次，调程序时忽略了这里
+	}
+	int t=s_len-wordnum*L[0].size();
+	for(int i=0; i<=(s_len-wordnum*(int)L[0].size()); ++i)    //i表示每轮查找时字符串的开始位置
+	{
+		int j=0;
+		for(j=0; j<wordnum; ++j)          //以i开始的位置，向前查找j个单词
+		{
+			string temp = S.substr(i+j*L[0].size(),L[0].size());
+			if(words.find(temp) == words.end())		//表示l列表里面没有当前字符串
+			{
+				cur.clear();                  //则记录情况清零，跳出循环，使得i+1，向前走一步
+				break;
+			}
+			cur[temp]++;				//如果找到了，对它的查找到的次数加1
+			if(cur[temp]>words[temp])//若查找到的次数大于l列表中的次数，则跳出循环，使得i+1，向前走一步
+			{	
+				cur.clear();
+				break;
+			}
+		}
+		if(j == wordnum)      //若向前查找j个单词都查完了，表示找到字串，将首地址i记录
+		{
+			result.push_back(i);
+			cur.clear();
+		}
+	}
+	return result;
+}
