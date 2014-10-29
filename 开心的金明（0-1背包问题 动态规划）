@@ -1,0 +1,62 @@
+//0-1背包问题（重点）
+//题目链接：http://www.cnblogs.com/taoziwel/articles/1856467.html
+//0-1背包问题详解：http://www.cnblogs.com/taoziwel/articles/1856467.html
+#include <iostream>
+#include <vector>
+using namespace std;
+
+struct class_thing	//定义每个要购买的物件类型，包括物件的价格和权重
+{
+	int price;
+	int weight;
+};
+
+int CaluateMaxValue(const vector<class_thing> &things,const int sum_money);
+
+int main()
+{
+	int sum_money,things_num;
+	cin >> sum_money >> things_num;
+
+	vector<class_thing> things;
+	while(things_num--)
+	{
+		class_thing temp_thing;
+		cin >> temp_thing.price >> temp_thing.weight;
+		things.push_back(temp_thing);
+	}
+	cout << CaluateMaxValue(things,sum_money) << endl;			//计算并输出最优购买方案
+	return 0;
+}
+
+int CaluateMaxValue(const vector<class_thing> &things,const int sum_money)
+{
+	int things_num = things.size();		//总的物品数
+	vector< vector<int> > value;
+	value.resize(things_num);
+
+	for(int i=0; i<things_num; ++i)		//矩阵value[0-things_num][0-sum_money],value[i][j]表示拥有j元钱，购买前i-1个物品的最优购买值	
+		value[i].resize(sum_money+1);
+
+	for(int i=things[0].price; i<=sum_money; ++i)	//对于只购买第一个物品进行初始化
+		value[0][i] = things[0].price*things[0].weight;
+
+	for(int i=1; i<things_num; ++i)			//要购买的前i个物品（注意，这里物品的编号是从1-0开始，钱的数量是从1开始）
+	{
+		 for(int j=0; j<=sum_money; ++j)	//钱的数量从0至最大钱数
+		 {
+			 if(j>=things[i].price)			//如果钱数大于第i个物品的价格
+			 {
+				 if(value[i-1][j]<(value[i-1][j-things[i].price]+things[i].price*things[i].weight))//若选择购买此物品的价值大于不选择购买此物品
+					 value[i][j] = value[i-1][j-things[i].price]+things[i].price*things[i].weight;	//那么就进行购买，其价值等于用剩下的钱购买前i-1个物品的最优值加上当前第i个物品的价值
+				 
+				 else
+					 value[i][j] = value[i-1][j];//否则就不购买，其价值仍然等于用j购买前i-1个物品的最优值
+			 }
+			 else
+				 value[i][j] = value[i-1][j];	//若钱的数量小于第i个物品的价格，那么value[i][j]仍然为用j购买前i-1个物品，因为买不起第i个，（这一句似乎可以优化去掉，不影响实验结果，不太清楚）
+		 }
+	}
+
+	return value[things_num-1][sum_money];
+}
