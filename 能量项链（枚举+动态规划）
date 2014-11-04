@@ -1,0 +1,68 @@
+/*************************
+*题目链接：http://www.rqnoj.cn/problem/5
+*思路：项链是一个圈，所以需要断开，从每个珠子前面断开都是一个不同的串，而每一个串都可以采用动态规划做，因此要枚举每一个断开点，
+*     再对每一个断开后形成的串，利用动态规划做。动态规划的基本思想可矩阵链相乘类似，详见《算法导论第三版》211页
+**************************/
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void FindMaxEnergy(const vector<int> &data, vector<vector<int> >&energy);
+int main()
+{
+    int N;
+	cin >> N;
+
+	vector<vector<int> > energy;
+	energy.resize(N);
+	for (int i = 0; i < N; ++i)
+		energy[i].resize(N);
+
+	vector<int> data;
+	while (N--)
+	{
+		int temp_int;
+		cin >> temp_int;
+		data.push_back(temp_int);
+	}
+	FindMaxEnergy(data,energy);
+	int max = 0;  
+	for (int i = 0; i < energy.size(); ++i)   //寻找能量
+	{
+		for (int j = 0; j < energy[i].size(); ++j)
+		{
+			if (energy[i][j] > max)                 
+				max = energy[i][j];
+		}
+	}
+	cout << max << endl;
+	return 0;
+}
+
+void FindMaxEnergy(const vector<int> &data, vector<vector<int> >&energy)
+{
+	int N = data.size();
+	for (int i = 0; i < N; ++i)	//	分别以i（0-(N-1)）号珠子为头，断开项链串
+	{
+		for (int len = 0; len < N; ++len)
+		{
+			for (int start = i; start < i+N-len; ++start)
+			{
+				if (len == 0)
+				{
+					energy[start%N][start%N] = 0;
+				}
+				else
+				{
+					int max_energy = 0;
+					for (int k = start; k < start + len; ++k)
+					{
+						if ((energy[start%N][k%N] + energy[(k + 1) % N][(start + len) % N] + data[start%N] * data[(k + 1) % N] * data[(start + len + 1) % N])>max_energy)
+							max_energy = energy[start%N][k%N] + energy[(k + 1) % N][(start + len) % N] + data[start%N] * data[(k + 1) % N] * data[(start + len + 1) % N];
+					}
+					energy[start%N][(start + len)%N] = max_energy;
+				}
+			}
+		}
+	}
+}
