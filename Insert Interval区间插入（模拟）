@@ -1,0 +1,92 @@
+/********************
+*题目链接：https://oj.leetcode.com/problems/insert-interval/
+*思路：总共分为三种情况，情况1：新区间在当前区间左边，这时插入就可以了；情况2：新区间在当前区间的邮编，那么就继续和下一个区间进行比较；
+*       情况3：新区间和当前区间有公共部分，那么挑选两个区间的最小开始和最大结束的值更新新区间的边界，删除当前区间，然后用更新后的新区间
+*       和后面的区间继续进行比较。
+*注意：本来利用原数据的vector就可以完成，但是vector的删除很花费时间，会导致时间超时，因此这里利用另外一个vector存储结果，不在原vector中
+*     进行删除
+*
+*********************/
+#include <iostream>
+#include <vector>
+#include <iterator>
+using namespace std;
+struct Interval 
+{
+	int start;
+	int end;
+	Interval() : start(0), end(0) {}
+	Interval(int s, int e) : start(s), end(e) {}	
+};
+
+vector<Interval> insert(vector<Interval> &intervals, Interval newInterval);
+int main()
+{
+	vector<Interval> interval_set;
+	Interval inter_temp;
+
+	int N = 0;
+	cin >> N;
+	while (N--)
+	{
+		cin >> inter_temp.start;
+		cin >> inter_temp.end;
+		interval_set.push_back(inter_temp);
+	}
+
+	Interval new_interval;
+	cin >> new_interval.start >> new_interval.end;
+
+	interval_set=insert(interval_set, new_interval);
+
+	for (auto i = interval_set.begin(); i != interval_set.end(); ++i)
+	{
+		cout << i->start << ',' << i->end << " ";
+	}
+	cout << endl;
+
+	return 0;
+}
+vector<Interval> insert(vector<Interval> &intervals, Interval newInterval) 
+{
+	if (intervals.size() == 0)
+	{
+		intervals.push_back(newInterval);
+		return intervals;
+	}
+	
+	int index = 0;
+	int flag = 0;
+	vector<Interval> ans;
+	for (index = 0; index < intervals.size();++index)
+	{
+		if (intervals[index].start > newInterval.end)//新区间在当前区间的左边
+		{
+			ans.push_back(newInterval);     //将新区间加入ans中
+			flag = 1;                       //记录新区间是否在本次循环中被加入了结果中，若没有，则表示新区间位置在最后，后面再添加进去
+			break;
+		}
+		else
+		{
+			if (intervals[index].end < newInterval.start) //新区间在当前区间的右边
+			{
+				ans.push_back(intervals[index]);
+			}	
+			else                    //两个区间有交集
+			{
+				if (newInterval.start > intervals[index].start)
+					newInterval.start = intervals[index].start;         //选择最大和最小更新新区间
+				if (newInterval.end < intervals[index].end)
+					newInterval.end = intervals[index].end;
+			}
+		}
+
+	}
+	for (index; index < intervals.size(); ++index)      //将新区间位置后的区间加入ans中
+	{
+		ans.push_back(intervals[index]);
+	}
+	if (flag == 0)            //如果新区间没有被加入进ans中，那么证明其位置在最后，添加
+		ans.push_back(newInterval);
+	return ans;
+}
