@@ -1,0 +1,58 @@
+//寻找最长回文子串
+//方法：从前到后一次边里每一个字符，把该字符或者该字符和下一个字符作为
+//回文子串的中心节点，向两边进行一次比较，相等回文字串长度增加
+class Solution {
+public:
+	string longestPalindrome(string s)
+	{
+		int pointer = 0;
+		int max_count = 0;
+		int str_start = 0;
+		int str_length = s.length();
+		for (int pointer = 0; pointer < str_length; ++pointer)
+		{
+			int i = pointer;
+			int j = pointer;
+			int temp_count = 0;
+			while (i >= 0 && j <= (str_length - 1))
+			{
+				if (s[i] == s[j])
+				{
+					temp_count = j - i + 1;
+					--i;
+					j++;
+				}
+				else
+					break;
+			}
+			if (temp_count > max_count)
+			{
+				max_count = temp_count;
+				str_start = i + 1;
+			}
+
+
+			i = pointer;
+			j = pointer + 1;
+			temp_count = 0;
+			while (i >= 0 && j <= (str_length - 1))
+			{
+				if (s[i] == s[j])
+				{
+					temp_count = j - i + 1;
+					--i;
+					j++;
+				}
+				else
+					break;
+			}
+			if (temp_count > max_count)
+			{
+				max_count = temp_count;
+				str_start = i + 1;
+			}
+		}
+
+		return s.substr(str_start, max_count);
+	}
+};
