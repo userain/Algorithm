@@ -1,0 +1,43 @@
+//折线字符串转换(ZigZag Conversion)
+//方法：根据折线字符串的规律，遍历字符串，计算出每一个字符在数组中的位置存储起来，最后按列遍历数组
+//下面程序中第一个for循环在计算存储位置时，将x与y写反了，存储后的矩阵刚好是理想结果的转置矩阵
+class Solution {
+public:
+	string convert(string s, int nRows) 
+	{
+		string result = "";
+		char table[1000][1000];
+		memset(table, 0, sizeof(table));
+		int x = 0, y = 0;
+		bool decline_flag = true;
+		for (int i = 0; i < s.length(); i++)
+		{
+			table[x][y] = s[i];
+			if ((y == (nRows - 1) || y == 0) && (i!=0))
+				decline_flag = !decline_flag;
+
+			if (decline_flag)
+				++y;
+			else
+			{
+				++x;
+				--y;
+			}
+		}
+		int count = 0;
+		for (y = 0; y < 1000; ++y)
+		{
+			for (x = 0; x < 1000; ++x)
+			{
+				if (table[x][y] != 0)
+				{
+					result = result + table[x][y];
+					count++;
+					if (count == s.length())
+						return result;
+				}
+			}
+		}
+		return result;
+	}
+};
