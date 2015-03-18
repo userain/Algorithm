@@ -1,22 +1,22 @@
-//折线字符串转换(ZigZag Conversion)
-//方法：根据折线字符串的规律，遍历字符串，计算出每一个字符在数组中的位置存储起来，最后按列遍历数组
-//下面程序中第一个for循环在计算存储位置时，将x与y写反了，存储后的矩阵刚好是理想结果的转置矩阵
+//折线字符串转换
+//方法：按照折线规律，计算每个字符在矩阵中的位置，存储起来，最后遍历矩阵
+//说明:在下面代码中，存储时将x和y搞反了，导致实际上存储的是理想中的转置矩阵
 class Solution {
 public:
 	string convert(string s, int nRows) 
 	{
 		string result = "";
 		char table[1000][1000];
-		memset(table, 0, sizeof(table));
+		memset(table, 0, sizeof(table));			//初始化
 		int x = 0, y = 0;
-		bool decline_flag = true;
+		bool decline_flag = true;							//下降方向的标志量
 		for (int i = 0; i < s.length(); i++)
 		{
 			table[x][y] = s[i];
-			if ((y == (nRows - 1) || y == 0) && (i!=0))
+			if ((y == (nRows - 1) || y == 0) && (i!=0))		//如果存储的是第一行或者最后一行，且不是第一个元素，那么就改变下降方向
 				decline_flag = !decline_flag;
 
-			if (decline_flag)
+			if (decline_flag)							//如果是下降方向
 				++y;
 			else
 			{
