@@ -1,0 +1,95 @@
+class Solution {
+public:
+	int atoi(string str)
+	{
+		bool fuhao_flag = false;
+		bool fushu_flag = false;
+		int num_end = str.length()-1;       //num_end用来记录数字的结尾处
+		
+		//去掉前面空格
+		for (int i = 0; i < str.length(); ++i)
+		{
+			if (str[i] == ' ')
+			{
+				str.erase(str.begin() + i);
+				i--;
+				num_end--;
+			}
+			else
+				break;
+		}
+		
+		//去除正负号，并判断数字的结尾处
+		for (int i = 0; i < str.length(); ++i)
+		{
+			if (str[i] == '-'||str[i]=='+')
+			{
+				if (fuhao_flag)
+					return 0;
+				else
+				{
+					fuhao_flag = true;
+					if (str[i] == '-')
+						fushu_flag = true;
+					else
+						fushu_flag = false;
+					str.erase(str.begin()+i);
+					i--;
+					num_end--;
+				}
+			}
+			else if (!(str[i] >= 48 && str[i] <= 57)||str[i]==' ')
+			{
+				num_end = i - 1;
+				break;
+			}
+		}
+		
+		//去除数字前面的0
+		for (int i = 0; i <= num_end; ++i)
+		{
+			if (str[i] == '0')
+			{
+				str.erase(str.begin()+i);
+				i--;
+				num_end--;
+			}
+			else
+				break;
+		}
+		//若没有有效数字，返回0
+		if (num_end<0)
+			return 0;
+			
+		//去除有效数字后面多余的字符
+		if (str.length()>(num_end+1))
+			str.erase(str.begin()+num_end+1,str.end());
+			
+		//判断字符串表示的数字是否越界
+		if (str.length() >10)
+		{
+				if (fushu_flag)
+					return INT_MIN;
+				else
+					return INT_MAX;
+		}
+		else if (str.length() == 10)
+		{
+			if (fushu_flag && str >= "2147483648")
+				return INT_MIN;
+			else if (!fushu_flag && str >= "2147483647")
+				return INT_MAX;
+		}
+		
+		long long int result = 0;
+		
+		for (int i = 0; i < str.length(); ++i)
+		{
+			result = result * 10 + (str[i] - 48);
+		}
+		if (fushu_flag)
+			return -result;
+		else
+			return result;
+	}
+};
