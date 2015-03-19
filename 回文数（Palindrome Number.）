@@ -1,0 +1,21 @@
+//判断整数是不是回文数
+class Solution {
+public:
+    bool isPalindrome(int x) 
+	{
+		int temp = x;
+		if (x < 0)      //若负数肯定不是
+			return false;
+		int result = 0;
+		while (x > 0)
+		{
+			int gewei = x % 10;         //从低位到高位求出每一位，从而得到x反向的数字，若想等则是回文数
+			x = (x - gewei) / 10;
+			result = result * 10 + gewei;
+		}
+		if (result == temp)
+			return true;
+		else
+			return false;
+	}
+};
