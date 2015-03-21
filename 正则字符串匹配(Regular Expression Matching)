@@ -1,0 +1,30 @@
+//正则字符串匹配
+//方法：利用递归，进行相应情况下的匹配
+class Solution {
+public:
+   bool isMatch(const char *s, const char *p)
+	{
+		if (strlen(p) == 0)
+			return (strlen(s) == 0);
+
+		if (p[1] == '*')
+		{
+			while ((*s != '\0' && *p == '.') || *s == *p)   //这里用while循环，因为对于aaa匹配正则式a*a这样的式子来说，不知道a*匹配几次，因此要一次一次试
+			                                                //还有这里的条件一定要有*s!='\0',否则以.*开头的正则式会进入死循环例如.*abc
+			{
+				if (isMatch(s, p + 2))
+					return true;
+				else
+					s++;
+			}
+			return isMatch(s,p+2);
+		}
+		else
+		{
+			if ((*s != '\0' && *p == '.') || *s == *p)
+				return isMatch(s + 1, p + 1);
+			return false;				
+		}
+	}
+    
+};
