@@ -1,0 +1,21 @@
+//整数转换为罗马数
+//方法：这里利用数组进行对应的转换，但是这里注意的是一定要将每个量级的4和9放进数组进行判断，因为4和9总是将它的补充位放在左边，与一般的不同
+class Solution {
+public:
+    string intToRoman(int num) 
+    {
+  		vector<int> values = {1000,900,500,400,100,90,50,40,10,9,5,4,1};
+  		string roma_values[] = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+  		
+  		string result = "";
+  		for (int i = 0; i < values.size(); ++i)
+  		{
+  			while (num >= values[i])
+  			{
+  				num = num - values[i];
+  				result = result + roma_values[i];
+  			}
+  		}
+  		return result;
+    }
+};
