@@ -1,0 +1,38 @@
+//电话字母结合
+//方法：先将字典提前存好，然后一层一层递归替换一个字符
+class Solution {
+public:
+	vector<string> dict;
+	vector<string> letterCombinations(string digits) 
+	{
+		vector<string> result;
+		string temp = "";
+		int len = digits.size();
+		if (len == 0)
+			return result;
+		dict.resize(10);
+		dict[2] = "abc";
+		dict[3] = "def";
+		dict[4] = "ghi";
+		dict[5] = "jkl";
+		dict[6] = "mno";
+		dict[7] = "pqrs";
+		dict[8] = "tuv";
+		dict[9] = "wxyz";
+		result.clear();
+		dfs(digits,len,temp,result);
+		return result;
+	}
+	void dfs(const string& digits, int len, string temp,vector<string>&result)
+	{
+		if (0 == len)
+		{
+			result.push_back(temp);
+			return;
+		}
+		for (int i = 0; i < dict[digits[digits.length() - len] - '0'].length(); ++i)
+		{
+			dfs(digits, len - 1, temp + dict[digits[digits.length() - len] - '0'][i], result);
+		}
+	}
+};
