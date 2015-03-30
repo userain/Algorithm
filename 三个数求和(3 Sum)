@@ -1,0 +1,47 @@
+/*三个数求和*/
+//方法：先将所有数进行排序，然后固定一个数，用两个指针从固定的数的右侧一头一尾进行寻找
+//固定的数的左边的已经不再需要寻找了，因为存在它们的组合已经被以前面的数为固定的数时寻找过了
+class Solution {
+public:
+	vector<vector<int> > threeSum(vector<int> &num)
+	{
+		vector<vector<int> > result;
+		sort(num.begin(), num.end());
+		for (int i = 0; i < num.size(); ++i)
+		{
+			if (i > 0 && num[i] == num[i - 1])
+				continue;
+			twoSum(-num[i], num, i,result);
+		}
+
+		return result;
+	}
+
+	void twoSum(int sum, vector<int> &num, int pointer1, vector<vector<int> >&result)
+	{
+		vector<int> temp;
+		int i = pointer1+1;
+		int j = num.size() - 1;
+		while (i<j)
+		{
+			if ((i>pointer1+1)&&num[i]==num[i-1])             //若这个数与前面一个数相等就不用再判断了
+				i++;
+			else if ((j<num.size()-1)&&num[j] ==num[j+1])     //若这个数与前面一个数相等就不用再判断了
+				j--;
+			else if ((num[i] + num[j]) < sum)
+				i++;
+			else if (num[i] + num[j] > sum)
+				j--;
+			else
+			{
+				temp.clear();
+				temp.push_back(num[pointer1]);
+				temp.push_back(num[i]);
+				temp.push_back(num[j]);
+				sort(temp.begin(), temp.end());
+				result.push_back(temp);
+				i++;
+			}
+		}
+	}
+};
