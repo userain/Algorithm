@@ -1,0 +1,54 @@
+//方法：还是通过固定两个数，寻找2Sum的方法
+//但是这里要注意的是，在外面固定两个数的时候，要是相等，也不能再次寻找，否则有可能会出现重复结果，
+//而且一定在这个数第一次出现的时候先寻找将后面的跳过，而不是先将前面的跳过再对最后出现的一次寻找，这样的话就错过了判断结果中存在多个此数的可能性
+class Solution {
+public:
+	vector<vector<int> > fourSum(vector<int> &num, int target) 
+	{
+		/*if (num.size() < 4)
+			return ;*/
+		vector<vector<int> > result;
+		sort(num.begin(),num.end());
+		for (int i = 0; i < num.size(); ++i)
+		{
+			if (i>0&&num[i] == num[i - 1])          //若是与前面计算的相等，则跳过
+				continue;
+			for (int j = i + 1; j < num.size(); ++j)
+			{
+				if (j > i + 1 && num [j] == num[j - 1]) //若与前面的数相等，则跳过
+					continue;
+				twoSum(num, i, j, target - num[i] - num[j],result);
+			}
+		}
+
+		return result;
+	}
+	void twoSum(vector<int> &num, int pointer1, int pointer2, int target, vector<vector<int> >&result)
+	{
+		int pointer3 = pointer2 + 1;
+		int pointer4 = num.size() - 1;
+		while (pointer3 < pointer4)
+		{
+			if (pointer3 > pointer2 + 1 && num[pointer3] == num[pointer3 - 1])
+				++pointer3;
+			else if (pointer4 < num.size() - 1 && num[pointer4] == num[pointer4 + 1])
+				--pointer4;
+			else if ((num[pointer3] + num[pointer4]) < target)
+				++pointer3;
+			else if ((num[pointer3] + num[pointer4]) > target)
+				--pointer4;
+			else
+			{
+				vector<int> temp;
+				temp.push_back(num[pointer1]);
+				temp.push_back(num[pointer2]);
+				temp.push_back(num[pointer3]);
+				temp.push_back(num[pointer4]);
+				result.push_back(temp);
+				++pointer3;
+				--pointer4;
+			}
+		}
+		
+	}
+};
