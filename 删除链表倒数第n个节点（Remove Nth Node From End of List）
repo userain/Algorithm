@@ -1,0 +1,40 @@
+//采用双指针法，第一个指针和第二个指针之间相差n
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+	ListNode *removeNthFromEnd(ListNode *head, int n) 
+	{
+		ListNode * pointer1 = head;
+		ListNode * pointer2 = NULL;
+		ListNode * up_pointer2 = NULL;
+		while (n--)
+			pointer1 = pointer1->next;
+		pointer2 = head;
+
+		while (pointer1)
+		{
+			pointer1 = pointer1->next;
+			up_pointer2 = pointer2;
+			pointer2 = pointer2->next;
+		}
+		
+		if (up_pointer2 == NULL)
+		{
+			head = pointer2->next;
+			delete pointer2;
+			return head;
+		}
+
+		up_pointer2->next = pointer2->next;
+		delete pointer2;
+
+		return head;
+	}
+};
