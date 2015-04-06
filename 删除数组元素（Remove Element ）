@@ -1,0 +1,29 @@
+//方法：从头开始寻找元素elem pointer1，找到后，从后面寻找不是elem的元素pointer2，将其值放在pointer1中，将pointer2值修改为elem，从pointer1后面继续寻找
+class Solution {
+public:
+	int removeElement(int A[], int n, int elem)
+	{
+		int pointer1, pointer2;
+		int temp;
+		for (pointer1 = 0; pointer1 < n; ++pointer1)
+		{
+			if (A[pointer1] == elem)
+			{
+				for (pointer2 = pointer1 + 1; pointer2 < n; ++pointer2)
+				{
+					if (A[pointer2] != elem)
+					{
+						temp = A[pointer2];
+						A[pointer2] = elem;
+						break;
+					}
+						
+				}
+				if (pointer2 == n)
+					return pointer1;
+
+				A[pointer1] = temp;
+			}
+		}
+	}
+};
