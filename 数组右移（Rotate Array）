@@ -1,0 +1,30 @@
+//方法：这里利用数组右移的方式计算出每一个数组的位置，直接存放，例如a先放在b处，再计算b的位置，再放置
+//这里要注意的是，一旦出现几个数字之间放置的位置形成一个循环，那么就要跳出这种情况，这里利用distance计算走的位置，
+//若distance刚好为n的整数倍，就表示形成了循环
+class Solution
+{
+public:
+	void rotate(int nums[], int n, int k)
+	{
+		k = k - (k / n)*n;
+		int old_num = 0;            
+		int new_num = 0;
+		int temp1 = nums[old_num];
+		int temp2 = 0;
+		int distance = 0;
+		for (int j = 0; j < n; ++j)
+		{
+			new_num = (old_num + k) % n;
+			temp2 = nums[new_num];
+			nums[new_num] = temp1;
+			temp1 = temp2;
+			old_num = new_num;
+			distance = (distance + k) % n;
+			if (distance == 0)
+			{
+				old_num = (old_num + 1) % n;
+				temp1 = nums[old_num];
+			}
+		}
+	}
+};
