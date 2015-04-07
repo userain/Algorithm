@@ -1,0 +1,34 @@
+class Solution 
+{
+public:
+	void merge(int A[], int m, int B[], int n) 
+	{
+		if ((m + n) == 0)
+			return;
+		vector<int>temp;
+		int minlen = min(m, n);
+		int pointerA = 0;
+		int pointerB = 0;
+		while (pointerA < m&&pointerB < n)
+		{
+			if (A[pointerA] <= B[pointerB])
+				temp.push_back(A[pointerA++]);
+			else
+				temp.push_back(B[pointerB++]);
+		}
+
+		if (pointerA >= m)
+		{
+			for (; pointerB < n; pointerB++)
+				temp.push_back(B[pointerB]);
+		}
+		else
+		{
+			for (; pointerA < m; pointerA++)
+				temp.push_back(A[pointerA]);
+		}
+
+		for (int i = 0; i < temp.size(); ++i)
+			A[i] = temp[i];
+	}
+};
