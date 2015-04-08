@@ -1,0 +1,85 @@
+//方法：采用递归，上下左右一次寻找
+class Solution {
+public:
+	bool exist(vector<vector<char> > &board, string word) 
+	{
+		vector< vector<bool>>flag;
+		bool result = false;
+		int rows = board.size();
+		int column = board[0].size();
+		flag.resize(rows);
+		for (int k = 0; k < rows; ++k)
+			flag[k].resize(column);
+		int i = 0, j = 0;
+		for (i = 0; i < rows; ++i)
+		{
+			for (j = 0; j < column; ++j)
+			{
+				if (board[i][j] == word[0])
+				{
+					if (word.length() == 1)
+						return true;
+					result = neighbour_find(board, i, j, flag,word,1);
+					if (result == true)
+						return true;
+				}
+			}
+		}
+		return false;		
+	}
+
+	bool neighbour_find(vector<vector<char> > &board, int i, int j, vector< vector<bool>>flag,const string& word,int pointer)
+	{
+		flag[i][j] = true;
+		bool result = false;
+		if (i>0 && board[i - 1][j] == word[pointer] && flag[i - 1][j] == false)
+		{
+			if (pointer  == (word.size() - 1))
+				return true;
+			else
+				result = neighbour_find(board, i - 1, j, flag, word, pointer + 1);
+		}
+
+		if (result == true)
+			return true;
+		else
+		{
+			if (j<(board[i].size() - 1) && board[i][j + 1] == word[pointer] && flag[i][j + 1] == false)
+			{
+				if (pointer == (word.size() - 1))
+					return true;
+				else
+					result = neighbour_find(board, i, j + 1, flag, word, pointer + 1);
+			}
+		}
+		
+		if (result == true)
+			return true;
+		else
+		{
+			if (i < (board.size() - 1) && board[i + 1][j] == word[pointer] && flag[i + 1][j] == false)
+			{
+				if (pointer  == (word.size() - 1))
+					return true;
+				else
+					result = neighbour_find(board, i + 1, j, flag, word, pointer + 1);
+			}
+		}
+		if (result == true)
+			return true;
+		else
+		{
+			if (j > 0 && board[i][j - 1] == word[pointer] && flag[i][j - 1] == false)
+			{
+				if (pointer == (word.size() - 1))
+					return true;
+				else
+					result = neighbour_find(board, i, j - 1, flag, word, pointer + 1);
+			}
+		}
+		if (result == true)
+			return true;
+		else
+			return false;
+	}
+};
