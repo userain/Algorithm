@@ -1,0 +1,32 @@
+//方法：这是一道简单的动态规划题目，进mem[i][j]表示矩阵i*j的条目数，mem[i][j] = mem[i-1][j]+mem[i][j-1]
+class Solution
+{
+public:
+	int uniquePaths(int m, int n)
+	{
+		vector<vector<int> > mem;
+		mem.resize(m+1);
+		for (int i = 0; i <= m; ++i)
+		{
+			mem[i].resize(n+1);
+			mem[i][0] = 0;
+		}
+		for (int i = 0; i <= n; ++i)
+			mem[0][i] = 0;
+		mem[1][1] = 1;
+
+		for (int i = 1; i <= m; ++i)
+		{
+			for (int j = 1; j <= n; ++j)
+			{
+				if (i == 1 && j == 1)
+					mem[i][j] = 1;
+				else
+					mem[i][j] = mem[i - 1][j] + mem[i][j - 1];
+			}
+				
+		}
+
+		return mem[m][n];
+	}
+};
