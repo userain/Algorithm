@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+struct tree_node
+{
+	char value;
+	tree_node* left_next;
+	tree_node* right_next;
+	tree_node() :value(NULL), left_next(NULL),right_next(NULL){}
+};
+void creat_tree(const string& front_ergodic,
+	const string& middle_ergodic, tree_node** start_node_pointer)
+{
+  //这里传入的front_grgodic是整个二叉树的前序遍历，middle_ergodic是以start_node_pointer为根节点的二叉树的中序遍历
+  
+  //先在中序遍历中找到根节点
+	char head = (*start_node_pointer)->value;
+	int head_mid_index = middle_ergodic.find(head);
+  
+  //再在前序遍历中寻找根节点左边的节点中第一个出现的节点，则便是左孩子
+	string left_sub_string = middle_ergodic.substr(0,head_mid_index);
+	int left_index=-1;
+	for (left_index = 0; left_index < front_ergodic.length(); ++left_index)
+	{
+		if (left_sub_string.find(front_ergodic[left_index]) != string::npos)
+			break;
+	}
+	//若找到左孩子，则加入二叉树中，并继续寻找其两个孩子
+	if (left_index < front_ergodic.length())
+	{
+		tree_node* left_node = new tree_node();
+		left_node->value = front_ergodic[left_index];
+		(*start_node_pointer)->left_next = left_node;
+		creat_tree(front_ergodic, left_sub_string, &left_node);
+	}
+	
+	//在前序遍历中寻找根节点右边节点中第一个出现的节点，便是右孩子
+	string right_sub_string = middle_ergodic.substr(head_mid_index + 1);
+	int right_index = -1;
+	for (right_index = 0; right_index < front_ergodic.length(); ++right_index)
+	{
+		if (right_sub_string.find(front_ergodic[right_index]) != string::npos)
+			break;
+	}
+  //若找到右孩子则加入二叉树中，并继续寻找其两个孩子
+	if (right_index < front_ergodic.length())
+	{
+		tree_node* right_node = new tree_node();
+		right_node->value = front_ergodic[right_index];
+		(*start_node_pointer)->right_next = right_node;
+		creat_tree(front_ergodic, right_sub_string, &right_node);
+	}
+}
+int main()
+{
+	string front_bianli = "12473568";
+	string middle_bianli = "47215386";
+	tree_node* head = new tree_node();
+	head->value = front_bianli[0];
+	creat_tree(front_bianli, middle_bianli, &head);
+	return 0;		
+}
