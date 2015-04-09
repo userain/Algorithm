@@ -1,0 +1,36 @@
+//方法：此题在Unique Paths的基础上加入了障碍物，因此在利用动态规划求解时，要对每一个节点进行判断，若该节点为障碍物，则抵达该障碍物的路径数必然为0
+class Solution {
+public:
+	int uniquePathsWithObstacles(vector<vector<int> > &obstacleGrid) 
+	{
+		int m = obstacleGrid.size();
+		int n = obstacleGrid[0].size();
+
+		vector<vector<int> > mem;
+		mem.resize(m + 1);
+		for (int i = 0; i <= m; ++i)
+		{
+			mem[i].resize(n + 1);
+			mem[i][0] = 0;
+		}
+		for (int i = 0; i <= n; ++i)
+			mem[0][i] = 0;
+		mem[1][1] = 1;
+
+		for (int i = 1; i <= m; ++i)
+		{
+			for (int j = 1; j <= n; ++j)
+			{
+				
+				 if (obstacleGrid[i-1][j-1] == 1)//若该节点为障碍我，则以该节点为终止节点的路径数为0
+					mem[i][j] = 0;
+				 else if (i == 1 && j == 1)     
+					 mem[i][j] = 1;
+				else
+					mem[i][j] = mem[i - 1][j] + mem[i][j - 1];
+			}
+		}
+
+		return mem[m][n];
+	}
+};
