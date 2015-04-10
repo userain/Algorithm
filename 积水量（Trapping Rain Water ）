@@ -1,0 +1,31 @@
+//方法：双指针，这个题目比较难，从两边扫描
+class Solution {
+public:
+	int trap(int A[], int n)
+	{
+		int left = 0;
+		int right = n - 1;
+		int sechigh = 0;
+		int area = 0;
+		
+		while (left < right)
+		{
+		/*若左边小于右边，证明left位置的bar会积水，将取sechigh与A[left]的大值就是left位置左边的水坑边界高度h，用h-A[left]就是在left位置的积水高度*/
+		/*为什么max(A[left], sechigh)就是左边水坑的高度，因为，若sechigh之前存储的是右边的高度，那么就说明sechigh的历史值一定小于现在的A[left],此时max(A[left], sechigh)必定为A[left],left处不积水，若sechigh之前存储的是左边的高度，那么	max(A[left], sechigh)则刚好是left位置左边的历史最大值*/
+			if (A[left] < A[right])		
+			{
+				sechigh=max(A[left], sechigh);
+				area = area + sechigh - A[left];
+				++left;
+			}
+			else							//与前面类似
+			{
+				sechigh = max(A[right],sechigh);
+				area = area + sechigh - A[right];
+				--right;
+			}
+		}
+		return area;
+
+	}
+};
