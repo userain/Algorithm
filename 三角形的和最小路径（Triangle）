@@ -1,0 +1,33 @@
+//题目：题目要求给出从顶点到底行的和最小的路径
+//方法：利用动态规划，到点（i，j）的最小和路径为到点（i-1，j-1）和到点（i-1，j）和中的小值加上点（i，j）的值
+//递归方程：f(i,j) = min{f(i-1,j-1),f(i-1,j)]+value(i,j)
+class Solution {
+public:
+	int minimumTotal(vector<vector<int> > &triangle)
+	{
+		int rows = triangle.size();
+		if (rows == 1)
+			return triangle[0][0];
+		int minsum = INT_MAX;
+		for (int i = 1; i < rows; ++i)
+		{
+			for (int j = 0; j < triangle[i].size(); ++j)
+			{
+				if (j == 0)
+					triangle[i][j] = triangle[i][j] + triangle[i - 1][j];
+				else if (j == (triangle[i].size() - 1))
+					triangle[i][j] = triangle[i][j] + triangle[i - 1][j - 1];
+				else
+				{
+					triangle[i][j] = min(triangle[i][j] + triangle[i - 1][j - 1], triangle[i][j] + triangle[i - 1][j]);
+				}
+			}
+		}
+
+		for (int j = 0; j < (triangle[rows - 1].size()); ++j)
+		{
+			minsum = min(triangle[rows - 1][j], minsum); 
+		}
+		return minsum;
+	}
+};
