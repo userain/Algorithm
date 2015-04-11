@@ -1,0 +1,25 @@
+//题目：输出一个集合的所有子集合
+//方法：由于题目要求所有子集合均为升序，因此先对集合进行排序，然后利用从0到2^n-1对应每一种情况，
+//      若该数字二进制某一位为1，则取该字符，为0则不取
+class Solution {
+public:
+	vector<vector<int> > subsets(vector<int> &S)
+	{
+		vector<int> temp;
+		vector<vector<int> >result;
+		sort(S.begin(),S.end());    //排序
+		int len = S.size();         
+		for (int num = 0; num < (1 << len); ++num)  //利用0到2^-1整数，对应每一种情况
+		{
+			temp.clear();
+			for (int bit = 1; bit <= len; ++bit)      //扫描整数num二进制表示的每一位，若为1取对应字符，若为0则不取
+			{
+				int t = 1 << (bit - 1);
+				if ((num&t) != 0)
+					temp.push_back(S[bit-1]);
+			}
+			result.push_back(temp);
+		}
+		return result;
+	}
+};
