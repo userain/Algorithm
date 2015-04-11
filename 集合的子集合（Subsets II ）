@@ -1,0 +1,27 @@
+//与Subsets 题目一样，不过这里面会有重复的，因此利用原来的方法再对结果进行map去重，就可以了
+class Solution {
+public:
+    vector<vector<int> > subsetsWithDup(vector<int> &S) 
+  	{
+		vector<int> temp;
+		vector<vector<int> >result;
+		map<vector<int>, int> test;
+		sort(S.begin(),S.end());
+		int len = S.size();
+		for (int num = 0; num < (1 << len); ++num)
+		{
+			temp.clear();
+			for (int bit = 1; bit <= len; ++bit)
+			{
+				int t = 1 << (bit - 1);
+				if ((num&t) != 0)
+					temp.push_back(S[bit-1]);
+			}
+			test[temp] = 1;
+		}
+		
+		for (auto e = test.begin(); e != test.end();++e)
+			result.push_back(e->first);
+		return result;
+	}
+};
