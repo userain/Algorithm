@@ -1,0 +1,31 @@
+//题目：对只有0，1，2的数组进行排序
+//方法：用三个指针分别表示0，1，2序列的终止位置，根据当前A[i]的值，对前面已经排好的数字进行移动
+class Solution {
+public:
+	void sortColors(int A[], int n)
+	{
+		if (n == 0 || n == 1)
+			return;
+		int zeropoint = -1;
+		int onepoint = -1;
+		int twopoint = -1;
+		for (int i = 0; i < n; ++i)
+		{
+			if (A[i] == 0)      //若为0
+			{
+				A[++twopoint] = 2;  //  0，1，2序列都要往后移
+				A[++onepoint] = 1;
+				A[++zeropoint]= 0;
+			}
+			else if (A[i] == 1)   //若为1，只需移动1，2序列
+			{
+				A[++twopoint] = 2;
+				A[++onepoint] = 1;
+			}
+			else
+			{
+				A[++twopoint] = 2;  //若为2，则移动2序列
+			}
+		}
+	}
+};
