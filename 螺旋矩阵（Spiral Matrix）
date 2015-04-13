@@ -1,0 +1,48 @@
+//螺旋打印矩阵
+//方法：以矩阵对角线上的点作为起始点，例如（1，1），（2，2），以右下角的点作为每一圈（endx，endy）循环打印，详见《剑指offer129页》
+class Solution {
+public:
+	vector<int> spiralOrder(vector<vector<int> > &matrix)
+	{
+		vector<int> result;	
+		int rows = matrix.size();
+		if (rows == 0)
+			return result;
+
+		int start = 0;
+		int columns = matrix[0].size();
+		while (((start * 2) < rows) && (start * 2 < columns))
+		{
+			cycleolder(start,matrix,result,rows,columns);
+			++start;
+		}
+		return result;
+	}
+
+	void cycleolder(int start, vector<vector<int> >&matrix,vector<int>& result, int rows, int columns)
+	{
+		int endx = rows - start - 1;
+		int endy = columns - start - 1;
+		for (int i = start; i <= endy; ++i)
+			result.push_back(matrix[start][i]);
+
+		if ((endx - start) > 0)
+		{
+			for (int i = start+1; i <= endx; ++i)
+				result.push_back(matrix[i][endy]);
+		}
+
+		if (((endy - start)>0) && ((endx - start) > 0))
+		{
+			for (int i = endy - 1; i >= start; --i)
+				result.push_back(matrix[endx][i]);
+		}
+		if (((endx - start) > 1) && ((endy - start) > 0))
+		{
+			for (int i = endx - 1; i > start; --i)
+			{
+				result.push_back(matrix[i][start]);
+			}
+		}
+	}
+};
