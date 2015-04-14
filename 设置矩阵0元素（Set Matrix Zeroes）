@@ -1,0 +1,64 @@
+//题目：对矩阵中是0的行列置0
+//方法：常数空间解法，先找到第一个0，记录其行和列，并利用该行和列对矩阵的整体每行每列情况进行记录
+//注意：这里在发现第一个0后，一定要对该0所在的行和列先进行扫描，因为后续要对这行和列进行修改，该开始写程序的时候，
+//没有对该行和列进行扫描，直接置0，出错了
+class Solution {
+public:
+	void setZeroes(vector<vector<int> > &matrix) 
+	{
+		int recordex = -1, recordey = -1;
+		int rows = matrix.size();
+		int column = matrix[0].size();
+		for (int i = 0; i < rows; ++i)
+		{
+			for (int j = 0; j < column; ++j)
+			{
+				if (0 == matrix[i][j] && -1 == recordex)
+				{
+					recordex = i;
+					recordey = j;
+					for (int m = 0; m < column; ++m)
+					{
+						if (0 == matrix[recordex][m])
+							matrix[recordex][m] = 1;
+						else
+							matrix[recordex][m] = 0;
+					}
+					for (int m = 0; m < rows; ++m)
+					{
+						if (0 == matrix[m][recordey])
+							matrix[m][recordey] = 1;
+						else
+							matrix[m][recordey] = 0;
+					}
+				}
+				else if (i!=recordex&&j!=recordey&&0 == matrix[i][j] && -1 != recordex && (1 != matrix[recordex][j] || 1 != matrix[i][recordey]))
+				//这里i!=recordex&&j!=recordey表示不能再对记录行进行判断，因为记录行列被修改了，再判断会出错
+				//(1 != matrix[recordex][j] || 1 != matrix[i][recordey])这里表示不再对已经判断过的行列再判断，这里注意这两个之间是或的关系
+				{
+					matrix[recordex][j] = 1;
+					matrix[i][recordey] = 1;
+				}
+			}
+				
+		}
+		if (-1 == recordex&&-1 == recordey)
+			return;
+		for (int k = 0; k < rows; ++k)
+		{
+			if (1 == matrix[k][recordey])
+			{
+				for (int m = 0; m < column; ++m)
+					matrix[k][m] = 0;
+			}
+		}
+		for (int k = 0; k < column; ++k)
+		{
+			if (1 == matrix[recordex][k])
+			{
+				for (int m = 0; m < rows; ++m)
+					matrix[m][k] = 0;
+			}
+		}
+	}
+};
