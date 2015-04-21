@@ -1,0 +1,37 @@
+//题目：在有序矩阵中寻找某一个数字
+//方法：先与每一行最后一个进行比较，找到该数字所在的行，然后在行内利用二分查找
+class Solution {
+public:
+	bool searchMatrix(vector<vector<int> > &matrix, int target)
+	{
+		if (matrix.size() == 0)
+			return false;
+
+		int rowsindex = -1;
+		int length = matrix[0].size();
+		for (int i = 0; i < matrix.size(); ++i)
+		{
+			if (matrix[i][length-1] == target)
+				return true;
+			else if (matrix[i][length-1] > target)
+			{
+				rowsindex = i;
+				break;
+			}
+		}
+		if (rowsindex == -1)
+			return false;
+		return FindTarget(matrix[rowsindex],target,0,length-2);
+	}
+
+	bool FindTarget(vector<int> A, int target, int startindex, int endindex)
+	{
+		if (startindex > endindex)
+			return false;
+		int middle = (startindex + endindex) >> 1;
+		if (A[middle] == target)
+			return true;
+		else
+			return 	A[middle] > target ? FindTarget(A, target, startindex, middle - 1) : FindTarget(A, target, middle + 1, endindex);
+	}
+};
