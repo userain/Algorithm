@@ -1,0 +1,44 @@
+//题目:在一个有序数组中搜索某个数字的起始点和终止点，要求时间复杂度度为O(logn)
+//方法：采用分治法，类似于二叉搜索，将区间中点与目标数进行比较，相等，则更新起始点和终止点index，若小于result[0]表示比找到的最小地址还小，就更新，与
+//result[1]进行比较，若大则证明比现在找到的地址还大，更新
+class Solution 
+{
+public:
+	vector<int> searchRange(int A[], int n, int targergt) 
+	{
+		vector<int>result;	
+		if (n == 0)
+			return result;
+		result.resize(2);
+		result[0] = -1;
+		result[1] = -1;
+		FindTarget(A,0,n-1,targergt,result);
+		return result;
+	}
+
+	void FindTarget(int A[], int startindex,int endindex, const int targergt, vector<int>&result)
+	{
+		if (startindex > endindex)        //这里的startindex和endindex表示的是要寻找的区间起始和终止地址
+			return;
+		int middle = (startindex + endindex) >> 1;
+		if (targergt == A[middle])
+		{
+			if (result[0] == -1 || result[1] == -1)
+			{
+				result[0] = middle;
+				result[1] = middle;
+			}
+			else
+			{
+			   result[0] < middle ? (result[0] = result[0]) : (result[0] = middle);
+			   result[1] > middle ? (result[1] = result[1]) : (result[1] = middle);
+			}
+			FindTarget(A, startindex, middle - 1, targergt, result);
+			FindTarget(A, middle + 1, endindex, targergt, result);
+		}
+		else if (targergt > A[middle])
+			FindTarget(A,middle+1,endindex,targergt,result);
+		else
+			FindTarget(A,startindex,middle-1,targergt,result);		
+	}
+};
