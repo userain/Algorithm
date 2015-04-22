@@ -1,0 +1,36 @@
+//题目：要求求得序列的下一个最小字典序
+//方法：先从后往前寻找第一个num[i]小于num[i+1],然后在i之后从后往前找第一个比num[i]大的num[j]，num[j]与num[i]交换，然后将num[i]之后的逆序
+class Solution 
+{
+public:
+	void nextPermutation(vector<int> &num) 
+	{
+		int length = num.size();
+		if (length < 2)
+			return;
+		int pointer1 = -1;
+		for (int i = length - 2; i >= 0; --i)  //从后往前寻找第一个num[i]小于num[i+1]
+		{
+			if (num[i] < num[i + 1])
+			{
+				pointer1 = i;
+				break;
+			}
+		}
+		
+		if (pointer1 != -1)           //如果找到了第一个num[i]小于num[i+1]
+		{
+			for (int i = length - 1; i > pointer1; --i)
+			{
+				if (num[i] > num[pointer1])     //在i之后从后往前找第一个比num[i]大的num[j]，num[j]与num[i]交换
+				{
+					swap(num[i], num[pointer1]);
+					break;
+				}
+			}
+			reverse(num.begin() + pointer1 + 1, num.end()); //将num[i]之后的逆序
+		}
+		else
+			reverse(num.begin(), num.end());    //若没有找到第一个num[i]小于num[i+1]，证明这是一个降序序列，则下一个字典序，就是升序，例如4,3,2,1的下一个字典序就是1,2,3,4
+	}
+};
