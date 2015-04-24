@@ -1,0 +1,24 @@
+//题目：起始位置为数组头，数组中内容为此处可跳跃的最大步长，判断是否能跳跃到数组尾
+//方法：利用step存储每次可以走的最大步长，每向前走一步，step--，然后step=max（step，num[i]）,若step为0，则不能走到最后
+//此方法为贪心算法，每次存储局部可以走最长的
+class Solution {
+public:
+    bool canJump(vector<int>& nums)
+	{
+		if (nums.size() == 0)
+			return true;
+		int step = nums[0];
+		for (int i = 1; i < nums.size(); ++i)
+		{
+			if (step > 0)
+			{
+				--step;
+				step = max(step, nums[i]);
+			}
+			else
+				return false;
+		}
+		return true;
+	}
+
+};
