@@ -1,0 +1,25 @@
+//题目：最大连乘子串
+//方法：利用动态规划，最大乘积有可能是前面的最小负数乘以nums[i]，也可能是最大正数乘以nums[i]，因此要对前面的最小负数也要存储
+//注意：maxresult*num[i]，只要nums[i]不是0，那么它一定是最小或者最大的
+class Solution {
+public:
+	int maxProduct(vector<int>& nums)
+	{
+		int n = nums.size();
+		if (n == 0)
+			return 0;
+		int result = nums[0];
+		int maxresult = nums[0];
+		int minresult = nums[0];
+		for (int i = 1; i < n; ++i)
+		{
+			int a = maxresult*nums[i];
+			int b = minresult*nums[i];
+			maxresult = max(max(a,b),nums[i]);
+			minresult = min(min(a,b),nums[i]);
+			result = max(maxresult, result);			
+		}											   
+		return result;
+
+	}
+};
