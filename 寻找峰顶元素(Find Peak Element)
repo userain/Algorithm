@@ -1,0 +1,32 @@
+//题目：在数组中寻找大于两边的峰顶元素，nums[-1]和num[n]都认为是无穷小，因此num[0]和nums[n-1]只需判断一边
+//方法：采用分治法的思想，先以中间节点为中心，判断middle-1和middle+1，若这三个元素呈现一个上升曲线，则在后半个区间进行寻找，
+//    若呈现一个下降曲线，则在前半个区间进行寻找，若是一个谷底状，这两边任意一个方向都可以寻找，这里选择的还是后半个区间
+//注意：始终选择向上升的方向去寻找，因为num[0]和nums[n-1]为无穷小，因此即使寻找的区间一直上升，则到了最后必定会下降，因此在上升区间必定存在峰顶元素
+class Solution 
+{
+public:
+	int findPeakElement(vector<int>& nums) 
+	{
+		int startindex = 0;
+		int endindex = nums.size() - 1;
+		return findPeak(nums, startindex, endindex);
+	}
+	int findPeak(vector<int>& nums, int startindex, int endindex)
+	{
+		if (startindex > endindex)    //若区间没有元素，则返回-1下标，表示没有
+			return -1;
+		if (startindex == endindex)   //若区间只有一个元素，则返回
+			return startindex;
+		if ((startindex + 1) == endindex)   //若区间只有两个元素，返回大的
+			return nums[startindex] > nums[endindex] ? startindex : endindex;
+
+		int middle = (startindex + endindex) >> 1;
+		if (nums[middle] > nums[middle - 1] && nums[middle] > nums[middle + 1])   //若刚好是峰顶，则返回middle
+			return middle;
+
+		if (nums[middle] > nums[middle + 1] && nums[middle] < nums[middle - 1])     //若是下降曲线，则在前半区间进行寻找
+			return findPeak(nums, startindex, middle-1);
+
+		return findPeak(nums, middle+1, endindex);        //否则就在后半区间进行寻找
+	}
+};
