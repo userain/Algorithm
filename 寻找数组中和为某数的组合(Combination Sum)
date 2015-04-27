@@ -1,0 +1,49 @@
+//题目：寻找在数组中和为某个数的组合
+//方法：典型的深度搜索题目，采用递归形式进行求解
+class Solution {
+public:
+	vector<vector<int> > combinationSum(vector<int> &candidates, int target) 
+	{
+		
+		vector<vector<int> >result;
+		if (0 == target)
+			return result;
+		vector<int> temp; 
+		sort(candidates.begin(), candidates.end());
+		findCombination(candidates, target, temp, result);
+		return result;
+	}
+
+	void findCombination(vector<int>& candidates, int target, vector<int> temp,vector<vector<int>> &result)
+	{
+		if (target < 0)
+			return;
+		if (target == 0)
+		{ 
+			bool equalflag = false;
+			sort(temp.begin(), temp.end());
+			for (int i = 0; i < result.size(); ++i)
+			{
+				if (result[i] == temp)
+				{
+					equalflag = true;
+					break;
+				}
+			}
+			if (!equalflag)
+				result.push_back(temp);
+			return;
+		}
+		for (int i = 0; i < candidates.size()&& target>=candidates[i]; ++i)   
+		//这里一定要有target>=candidates[i]的判断，因为target<candidates[i]的情况会有很多，若不判断，
+		//会导致程序进行许多不必要的函数调用的压栈，时间差很多
+		{
+			if (i > 0 && candidates[i] == candidates[i - 1])
+				continue;
+
+				vector<int>mytemp = temp;
+				mytemp.push_back(candidates[i]);
+				findCombination(candidates,target-candidates[i],mytemp,result);
+		}
+	}
+};
