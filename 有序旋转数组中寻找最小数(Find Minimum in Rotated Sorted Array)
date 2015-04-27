@@ -1,0 +1,37 @@
+//题目：在一个排序被选择的数组中寻找最小数
+//方法：二分查找，将middle与startindex和endindex比较，若middle最大，则表示最小值在区间[middle+1,endindex]中，若middle小于
+//startindex和endindex，则需要判断middle是不是旋转点，将middle与middle-1比较，判断是不是旋转点，是旋转点则middle就是最小值，否则就在
+//区间[startindex,middle-1]中寻找，若middle大于startindex小于endindex，则表示这个序列没有被旋转，那么就直接返回startindex
+class Solution 
+{
+public:
+	int findMin(vector<int>& nums)
+	{
+		int length = nums.size();
+		if (0 == length)
+			return NULL;
+		if (1 == length)
+			return nums[0];
+
+		return findMinNum(nums,0,length-1);
+	}
+	int findMinNum(vector<int>& nums,int startindex,int endindex)
+	{
+		if (startindex > endindex)
+			return NULL;
+		if (startindex == endindex)
+			return nums[startindex];  
+		if ((startindex + 1) == endindex)         //一定要保证startindex和endindex之间总共只要有3个元素，因为这种算法中不能要求重复元素，若只有两个或一个元素，则middle与startindex相同
+			return min(nums[startindex], nums[endindex]);
+		int middle = (startindex + endindex) >> 1;
+		if (nums[middle] > nums[startindex] && nums[middle] > nums[endindex])   //若middle比两边都大，在[middle+1,endindex]中寻找
+			return findMinNum(nums, middle + 1, endindex);
+		if (nums[middle] > nums[startindex] && nums[middle] < nums[endindex])     //若middle大于startindex小于endindex，则表示这个序列没有被旋转，那么就直接返回startindex
+			return nums[startindex];
+		if (nums[middle] < nums[middle - 1])          //下面就只剩下middle比两边小的情况，那么就要和middle-1进行比较，判断middle是不是旋转点
+			return nums[middle];        //若是旋转点，则返回middle
+		return findMinNum(nums, startindex,middle-1);   //不是旋转点，则在[startindex,middle-1]寻找
+
+	}
+
+};
