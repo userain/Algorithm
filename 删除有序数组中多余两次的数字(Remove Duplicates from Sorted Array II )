@@ -1,0 +1,34 @@
+//题目：删除有序数组中重复出现的数字，每个数字最多只能出现两次
+//方法：用pointer记录前面已经有效的位置，用twotimes记录一个数字是否出现了两次，若是则再出现不处理，若第一或第二次出现则pointer++，然后放在pointer位置
+class Solution {
+public:
+	int removeDuplicates(int A[], int n)
+	{
+	  if(n == 0)
+	        return 0;
+		if (n == 1)
+			return 1;
+
+		int pointer = 0;
+		bool twotimes = false;
+		for (int i = 1; i < n; ++i)
+		{
+			if (A[i] != A[i - 1])
+			{
+				A[++pointer] = A[i];
+				twotimes = false;
+			}
+			else
+			{
+				if (twotimes)
+					continue;
+				else
+				{
+					twotimes = true;
+					A[++pointer] = A[i];
+				}
+			}
+		}
+		return pointer + 1;
+	}
+};
