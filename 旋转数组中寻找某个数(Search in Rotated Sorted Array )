@@ -1,0 +1,53 @@
+//题目：在旋转数组中寻找某个数位置
+//方法：先利用二分查找寻找出旋转点，再在旋转点两侧选择合适的区间进行二分查找
+class Solution {
+public:
+	int search(vector<int>& nums, int target) 
+	{
+		int pivotPointIndex = searchPivot(nums);    //寻找旋转点
+		int start,end;
+		if (target == nums[0])
+			return 0;
+		if (target < nums[0])
+		{
+			start = pivotPointIndex + 1;
+			end = nums.size() - 1;
+		}
+		if (target>nums[0])
+		{
+			start = 0;
+			end = pivotPointIndex;
+		}
+		while (start <= end)            //在区间[start,end]进行二分查找
+		{
+			int middle = (start + end) >> 1;
+			if (nums[middle] == target)
+				return middle;
+			else if (nums[middle] > target)
+				end = middle-1;
+			else
+				start = middle + 1;
+		}
+		return -1;
+	}
+
+	int searchPivot(vector<int>&nums)
+  {
+		int start = 0;
+		int end = nums.size() - 1;
+		while ((start+1) <= end)  //这里是start+1的原因是由于要访问middle+1区间，一定要保证区间长度至少为2
+		{
+		   int middle = (start + end) >> 1;
+			if (nums[middle] > nums[middle + 1])
+				return middle;
+			if (nums[start] > nums[middle] && nums[end] > nums[middle])
+				end = middle-1;
+			else
+				start = middle+1;
+		}
+		if (nums[start] > nums[end])
+			return start;
+		else
+			return end;
+	}
+};
