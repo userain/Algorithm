@@ -1,0 +1,61 @@
+//题目：在旋转数组中查找目标值是否存在
+//方法：先利用二分法查找数组的旋转点，然后在根据旋转点挑选合适的区间进行二分查找
+//注意：数组中会存在重复元素
+class Solution {
+public:
+	bool search(vector<int>& nums, int target) 
+	{
+		int pivotPointIndex = searchPivot(nums);
+		int start,end;
+		if (target == nums[0])
+			return true;
+		if (target < nums[0])
+		{
+			start = pivotPointIndex + 1;
+			end = nums.size() - 1;
+		}
+		if (target>nums[0])
+		{
+			start = 0;
+			end = pivotPointIndex;
+		}
+		while (start <= end)
+		{
+			int middle = (start + end) >> 1;
+			if (nums[middle] == target)
+				return true;
+			else if (nums[middle] > target)
+				end = middle-1;
+			else
+				start = middle + 1;
+		}
+		return false;
+	}
+
+	int searchPivot(vector<int>&nums)
+	{
+		int start = 0;
+		int end = nums.size() - 1;
+		
+		while ((start+1) <= end)                  //为什么是start+1,因为要访问middle+1元素，要保证区间元素至少为2个
+		{	
+			while (start < nums.size() && nums[start] == nums[start + 1])   //对于重复元素，start和end越过重复元素
+			++start;
+			while (end >= 0 && nums[end] == nums[end - 1])
+			--end;
+			if ((start + 1) > end)                                          //要防止越过重复元素时，start+1>end
+				break;
+			int middle = (start + end) >> 1;
+			if (nums[middle] > nums[middle + 1])
+				return middle;
+			if (nums[start] > nums[middle] && nums[end] > nums[middle])
+				end = middle-1;
+			else
+				start = middle+1;
+		}
+		if (nums[start] > nums[end])
+			return start;
+		else
+			return end;
+	}
+};
