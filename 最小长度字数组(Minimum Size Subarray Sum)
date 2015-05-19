@@ -1,0 +1,38 @@
+//方法:用start和end指针控制一个窗口，当窗口sum>=s，则start++，sum<s,则end++，在这期间一直更新最小长度minlength
+class Solution {
+public:
+	int minSubArrayLen(int s, vector<int>& nums) 
+	{
+		if (nums.size() == 0)
+			return 0;
+		int allsum = 0;
+		for (int i = 0; i < nums.size();++i)
+		{
+			allsum = allsum + nums[i];
+		}
+		if (allsum < s)
+			return 0;
+
+		int start = 0;
+		int end = 0;
+		int tempsum = nums[0];
+		int minlength = nums.size();
+		while (end < nums.size())
+		{
+			if (tempsum < s)
+			{
+				++end;
+				if (end >= nums.size())
+					break;
+				tempsum = tempsum + nums[end];
+			}
+			else
+			{
+				minlength = min(minlength, end - start + 1);
+				tempsum = tempsum - nums[start];
+				++start;
+			}
+		}
+		return minlength;
+	}
+};
