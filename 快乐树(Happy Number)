@@ -1,0 +1,30 @@
+//方法：根据快乐数的规则判断一个数是不是快乐数
+class Solution 
+{
+public:
+    bool isHappy(int n)
+	{
+		if(n<=0)
+			return false;
+    	map<int,bool> hashMap;
+    	int sum;
+    	int yushu;
+		while(1!=n)
+		{
+			sum=0;
+			while(n!=0)
+			{
+				yushu=n%10;
+				sum = sum+yushu*yushu;					
+				n = (n-yushu)/10;	
+			}
+			n = sum;
+			if(hashMap.find(n) == hashMap.end())
+				hashMap[n] = true;
+			else
+				return false;
+				
+		}	  
+		return true;  
+    }
+};
