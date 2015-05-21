@@ -1,0 +1,24 @@
+//题目：将一个排序的数组旋转后，寻找其中最小数字，其中有可能有重复元素
+//方法：二分法，首先保证left和right不同，总共有4种情况，详见代码
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+		int left = 0,right = nums.size()-1;
+		while(left<(right-1)){
+			if(nums[left] == nums[right]){			//首先保证left和right不同
+				++left;
+				continue;
+			}
+			int middle = (left+right)>>1;
+			if(nums[middle]>=nums[left]&&nums[middle]>nums[right])    //情况一
+				left = middle+1;                                          
+			else if(nums[middle]<=nums[right]&&nums[middle]<nums[left])//情况二
+				right = middle;                                         //注意，这里一定要是rightt=middle，而不是right=middle-1，因为有可能middle就是那个最小的元素
+			else if(nums[middle]>=nums[left]&&nums[middle]<nums[right])//情况三
+				return nums[left];
+			else if(nums[middle]<=nums[right]&&nums[middle]>nums[left])//情况4
+				return nums[left];				
+		}
+		return min(nums[left],nums[right]);
+    }
+};
