@@ -1,0 +1,20 @@
+//方法：利用一个currentRight存储当前区间右边的边界，便利当前区间内的值，寻找能够到达的最远的地方存储在maxArrive，
+//进入下一区间时，step+1，并且currentRight位上一个区间能够到达的最远的地方maxArrive
+//注意：下满的程序是针对肯定能够到达结尾处的情况，求解出最小步数
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+		if(nums.size() < 2)
+			return 0;
+			
+		int steps = 1,currentRight = nums[0],maxArrive = currentRight;
+		for(int i=1;i<nums.size();++i){
+			if(i>currentRight){
+				++steps;
+				currentRight = maxArrive;
+			}
+			maxArrive = max(maxArrive,i+nums[i]);
+		}
+		return steps;
+    }
+};
