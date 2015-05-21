@@ -1,0 +1,30 @@
+//方法：将数字都存储在hash表中，对每一个数字，寻找它的左边和右边相邻的数字，以及左边的左边，右边的右边等，直到hash表中不存在，
+//  将找到的数字全部置为无效，并记录此次的区间长度是否是历史最大，然后再从下一个有效数字开始，继续此过程。
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+		map<int,bool> hashMap;
+		int maxLength=0;
+		for(int i=0;i<nums.size();++i){
+			hashMap[nums[i]] = true;
+		}
+		for(int i=0;i<nums.size();++i){
+			if(hashMap[nums[i]]==true){
+				hashMap[nums[i]] = false;
+				int left=nums[i],right=nums[i],length=1;
+				while(hashMap[left-1]==true){
+					--left;
+					++length;
+					hashMap[left] = false;
+				}
+				while(hashMap[right+1]==true){
+					++right;
+					++length;
+					hashMap[right] = false;
+				}
+				maxLength = max(maxLength,length);
+			}
+		}
+		return maxLength;
+    }
+};
