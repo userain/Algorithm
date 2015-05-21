@@ -1,0 +1,12 @@
+//方法：由于可以买多次股票，因此只需计算price[i]-price[i-1],将所有price[i]-price[i-1]大于0的加起来
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+		int max=0;
+		for(int i=1;i<prices.size();++i){
+			if((prices[i]-prices[i-1])>0)
+				max = max+prices[i]-prices[i-1];
+		}
+		return max;
+    }
+};
