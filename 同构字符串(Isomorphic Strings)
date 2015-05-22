@@ -1,0 +1,25 @@
+//方法：由于要保证一对一的唯一性，因此要采用双hash，才能保证a->b,和b->a的一对一关系
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        map<char,char> myMaps;
+        map<char,char> myMapt;
+        if(s.size()!=t.size())
+            return false;
+        for(int pointer=0;pointer<s.size();++pointer){
+                if(myMaps.find(s[pointer]) == myMaps.end())
+                    myMaps[s[pointer]] = t[pointer];
+                else{
+                    if(myMaps[s[pointer]] != t[pointer])
+                        return false;
+                }
+                if(myMapt.find(t[pointer]) == myMapt.end())
+                    myMapt[t[pointer]] = s[pointer];
+                else{
+                    if(myMapt[t[pointer]]!=s[pointer])
+                        return false;
+                }
+        }
+        return true;
+    }
+};
