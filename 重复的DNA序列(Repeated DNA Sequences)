@@ -1,0 +1,25 @@
+//方法：对每一个长度为10的子字符串进行扫描，利用hash表对每一种字符串的个数进行统计
+//注意：由于只有四中字符，每一个字符的ASIC码后三位都不一样，因此只记录每个字符的后三位来记录一个字符串在hash表中，这样可以节省空间
+class Solution {
+public:
+	vector<string> findRepeatedDnaSequences(string s) {
+		map<unsigned int, int> stringMap;
+		vector<string> resultStr;
+		unsigned int strToInt=0;
+		for (int i = 9;i <= s.size();++i) {
+			strToInt = 0;
+			for (int k = 9;k >=0;--k) {
+				strToInt = (strToInt<<3) | (s[i - k] & (0x07));
+			}
+			if (stringMap.find(strToInt) != stringMap.end()) {
+				++stringMap[strToInt];
+				if (stringMap[strToInt] == 2) {//这里只能等于2，若写大于等于2则有可能一个字符串在结果种重复出现多次
+					resultStr.push_back(s.substr(i - 9, 10));
+				}
+			}
+			else
+				stringMap[strToInt] = 1;
+		}		
+		return resultStr;
+	}
+};
