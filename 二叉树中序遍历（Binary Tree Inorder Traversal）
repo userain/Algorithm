@@ -1,0 +1,26 @@
+//方法：二叉树的非递归中序遍历，利用栈进行存储，栈中每弹出一个，就要处理它的右子树，因此要先将所有最左边的节点存入栈中
+class Solution {
+public:
+	vector<int> inorderTraversal(TreeNode* root) {
+		vector<int> inorderTrav;
+		stack<TreeNode*> myStack;
+		TreeNode * tempP=root;
+		//先将最左边的节点指针存入栈中
+		while (tempP!=NULL){
+			myStack.push(tempP);
+			tempP = tempP->left;
+		}
+		while (!myStack.empty()){
+			tempP = myStack.top();      //弹出一个
+			myStack.pop();
+			inorderTrav.push_back(tempP->val);  //遍历当前值
+			tempP = tempP->right;
+			while (tempP != NULL) {     //查看它的右子树，将右子树中的所有最左边节点指针压入栈中
+				myStack.push(tempP);
+				tempP = tempP->left;
+			}
+		}
+		return inorderTrav;
+	}
+	
+};
