@@ -1,0 +1,56 @@
+//方法：利用hash表，将每一次的余数存储起来，并存储此次余数对应的结果起始位置在小数中的位置，在后续相除中若发现有一样的余数，表示出现了循环小数
+//便将前面一次出现的结果到现在的位置加括号
+class Solution {
+public:
+	string fractionToDecimal(int numerator, int denominator) {
+	//由于numberator会出现INT_MIN的情况，此时若强行转换为正数，numberator会溢出，因此要用longlongint表示
+	//很奇怪，如果用vs的编译器，根本不能编译通过，INT_MIN根本无法传入函数中，若用GCC，则正常通过
+		return myFractionToDecimal(numerator, denominator);   
+	}
+	string myFractionToDecimal(long long int numerator, long long int denominator) {
+		if (!numerator)
+			return "0";
+		string result;
+		if (!denominator)
+			return result;
+		if (numerator<0 ^ denominator<0)      //若两个数都是负数，则对结果加负号
+			result = result + '-';
+		numerator = abs(numerator);           //将两个数置为正数
+		denominator = abs(denominator);
+		map<long long int, int> yuShuMap;
+		result = result + intToStr(numerator / denominator);  //先除整数部分结果，存入result中
+		numerator = numerator%denominator;
+		if (!numerator)     //若直接整除，则返回，否则要加小数点
+			return result;
+		result = result + '.';    //加入小数点
+		int counter = result.size() - 1;
+		while (numerator) {
+			if (yuShuMap.find(numerator) == yuShuMap.end()) {     //若在hash表中没有找到numberator，则将numberator存入hash表中，并存入其结果的起始位置
+  				yuShuMap[numerator] = ++counter;            
+				result = result + intToStr(numerator * 10 / denominator);
+				numerator = numerator * 10 % denominator;
+			}
+			else {          //若在hash表中找到了，则表示出现了循环小数，根据上一次的结果的位置，插入括号
+				result.insert(result.begin() + yuShuMap[numerator], '(');
+				result = result + ')';
+				break;
+			}
+		}
+		return result;
+	} 
+	//整数转换为字符串
+	string intToStr(long long int num) {
+		if (!num)
+			return "0";
+		int yushu;
+		string result;
+		while (num) {
+			yushu = num % 10;
+			num = num / 10;
+			result = result + (char(yushu + 48));
+
+		}
+		reverse(result.begin(), result.end());
+		return result;
+	}
+};
