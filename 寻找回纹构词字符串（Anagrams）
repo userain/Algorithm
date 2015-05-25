@@ -1,0 +1,24 @@
+//方法：对每一个字符串排序，然后用hash表存储历史情况，若历史有，则存入result中，下面的方法不能针对有重复的字符串出现的情况
+class Solution {
+public:
+	vector<string> anagrams(vector<string>& strs) {
+		vector<string> result;
+		map<string, int> strHashMap;
+		string strTemp;
+		for (int i = 0;i < strs.size();++i) {
+			strTemp = strs[i];
+			sort(strTemp.begin(), strTemp.end());
+			if (strHashMap.find(strTemp) == strHashMap.end())
+				strHashMap[strTemp] = i;
+			else {
+				result.push_back(strs[i]);
+				if (strHashMap[strTemp] >= 0) {
+					result.push_back(strs[strHashMap[strTemp]]);
+					strHashMap[strTemp] = -1;
+				}
+			}
+					
+		}
+		return result;
+	}
+};
