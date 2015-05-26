@@ -1,0 +1,49 @@
+//方法：用三个指针分别指向result链表，和l1、l2链表
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+	ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+		if (l1 == NULL)
+			return l2;
+		if (l2 == NULL)
+			return l1;
+		ListNode *result;
+		ListNode *resultPointer;
+		if (l1->val < l2->val) {
+			result = l1;
+			resultPointer = l1;
+			l1 = l1->next;
+		}
+		else {
+			result = l2;
+			resultPointer = l2;
+			l2 = l2->next;
+		}
+		while(l1!=NULL&&l2!=NULL){
+			if (l1->val < l2->val) {
+				resultPointer->next = l1;
+				resultPointer = resultPointer->next;
+				l1 = l1->next;
+			}
+			else {
+				resultPointer->next = l2;
+				resultPointer = resultPointer->next;
+				l2 = l2->next;
+			}
+		}
+		if (l1 == NULL&&l2 != NULL) {
+			resultPointer->next = l2;
+		}
+		else if (l2==NULL&&l1!=NULL) {
+			resultPointer->next = l1;
+		}
+		return result;
+	}
+};
