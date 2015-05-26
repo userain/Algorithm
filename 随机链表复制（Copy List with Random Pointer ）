@@ -1,0 +1,29 @@
+//方法：先利用链表中的next将整个链表完整复制，然后利用hash表，将原链表中每一个节点的地址与新链表的对应节点的地址一一对应存储起来
+//然后从头至尾扫描原链表，根据hash表，对random部分进行填写
+class Solution {
+public:
+	RandomListNode *copyRandomList(RandomListNode *head) {
+		RandomListNode* result=NULL;
+		if (head == NULL)
+			return result;
+		map<RandomListNode*, RandomListNode*> listNodePtrHashMap;
+		result = new RandomListNode(head->label);
+		listNodePtrHashMap[head] = result;
+		RandomListNode* oldPointer = head->next;
+		RandomListNode* newPointer = result;
+		while (oldPointer != NULL) {            //根据next复制原链表
+			newPointer->next = new RandomListNode(oldPointer->label);
+			listNodePtrHashMap[oldPointer] = newPointer->next;      //将节点地址之间的对应关系存储在hash表中
+			oldPointer = oldPointer->next;
+			newPointer = newPointer->next;
+		}
+		oldPointer = head;
+		newPointer = result;
+		while (oldPointer != NULL) {          //利用hash表，对random部分进行复制
+			newPointer->random = listNodePtrHashMap[oldPointer->random];
+			newPointer = newPointer->next;
+			oldPointer = oldPointer->next;
+		}
+		return result;
+	}
+};
