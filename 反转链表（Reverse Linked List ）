@@ -1,0 +1,21 @@
+//方法：利用递归对链表进行反转
+class Solution {
+public:
+	ListNode* reverseList(ListNode* head) {
+		ListNode* result = NULL;
+		if (head==NULL)
+			return result;
+		reverse(head, result);
+		head->next = NULL;
+		return result;
+	}
+	void reverse(ListNode* head, ListNode* &result) {
+		if (head->next == NULL) {
+			result = head;
+			return;
+		}
+		reverse(head->next, result);
+		head->next->next=head;
+		return;
+	}
+};
