@@ -1,0 +1,35 @@
+//方法：利用栈对链表的每个节点的地址进行记录，在从头调整链表
+class Solution {
+public:
+	void reorderList(ListNode* head) {
+		stack<ListNode*> listStack;
+		int length = 0;
+		ListNode* pointer = head;
+		while (pointer) {
+			++length;
+			listStack.push(pointer);
+			pointer = pointer->next;
+		}
+		if (length <= 2)
+			return;
+		ListNode* temp = NULL;
+		ListNode* prePointer = NULL;
+		pointer = head;
+		while (length>1) {
+			temp = pointer->next;
+			pointer->next = listStack.top();
+			listStack.pop();
+			pointer->next->next = temp;
+			length = length - 2;
+			prePointer = pointer->next;
+			pointer = pointer->next->next;
+			
+		}
+		if (length == 0)
+			prePointer->next = NULL;
+		else {
+			prePointer->next = listStack.top();
+			prePointer->next->next = NULL;
+		}
+	}
+};
