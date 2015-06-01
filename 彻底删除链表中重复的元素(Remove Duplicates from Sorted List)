@@ -1,0 +1,39 @@
+//方法：pointer1，pointer2一前一后指向两个节点，利用标志量sameFlag表示该两变量是否相等，详见注释
+class Solution {
+public:
+	ListNode* deleteDuplicates(ListNode* head) {
+		if (!head)
+			return head;
+		ListNode** prePointer = &head;        //利用prePointer指针的指针，指向重复区域之前的节点的next，用于修改该区域的值，开始指向next
+		ListNode* pointer1 = head, *pointer2 = head->next;//pointer1和pointer2一前一后指向两个节点
+		bool sameFlag = false;      //相等的标志量
+		
+		ListNode* temp = NULL;
+		while (pointer1&&pointer2) {
+			if (pointer1->val == pointer2->val) {     //若两个节点的值相等
+				temp = pointer2->next;
+				delete(pointer2);           //删除pointer2节点，sameFlag为true
+				pointer2 = temp;
+				pointer1->next = pointer2;    //注意这里一定要让新的pointer2与pointer1链接，保持链表的连贯性
+				sameFlag = true;
+			}
+			else {          //若不相等，则要查看sameFlag，看之前是否相等
+				if (sameFlag) {     //之前相等，则删除pointer1，让前面的节点指向pointer2,sameFlag置为false
+					delete(pointer1);
+					(*prePointer) = pointer2;
+					sameFlag = false;
+				}
+				else {
+					prePointer = &(pointer1->next);   //之前不相等，则要更新prePointer，
+				}
+				pointer1 = pointer2;
+				pointer2 = pointer2->next;
+			}
+		}
+		if (sameFlag) {           //注意最后退出循环时还要判断sameFlag，查看是否最后两个变量相等，若最后两个变量相等，则不判断会出现只删除了一个的情况
+			delete(pointer1);   //若最后两个变量不相等，要将最后一个删除，让(*prePointer)为空
+			(*prePointer) = NULL;
+		}
+		return head;
+	}
+};
