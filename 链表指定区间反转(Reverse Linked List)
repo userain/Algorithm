@@ -1,0 +1,40 @@
+//方法：对链表指定区间进行反转，先找到区间的起始位置，然后利用栈对要反转的区间内的每个节点的地址进行存储，在依次弹出栈，赋值
+//注意：这里需要注意的是，当起始位置为1时，表明要从头反转改链表，则head指针的值则要改变，因此这里利用一个ListNode**指向反转区间
+//的前一个next位置
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+	ListNode* reverseBetween(ListNode* head, int m, int n) {
+		ListNode* pointer = head, *afterPointer = NULL;
+		ListNode** prePointer = NULL;
+		if (m == 1)         //若m为1，则prePoint指向head
+			prePointer = &head;
+		else        //否则prePoint指向反转区间前一个节点的next位置
+		{
+			for (int i = 1;i < (m-1);++i)
+				pointer = pointer->next;      
+			prePointer = &(pointer->next);
+			pointer = pointer->next;
+		}
+		stack<ListNode*> pointerStack;          //利用栈对反转区间中每一个节点的地址进行存储
+		for (int i = 0;i <= (n - m);++i) {
+			pointerStack.push(pointer);
+			pointer = pointer->next;
+		}
+		afterPointer = pointer;         //afterPointer指向反转区间的后一个节点
+		while (!pointerStack.empty()) {
+			*prePointer = pointerStack.top();
+			prePointer = &((*prePointer)->next);
+			pointerStack.pop();
+		}
+		(*prePointer) = afterPointer;
+		return head;
+	}
+};
