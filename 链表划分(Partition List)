@@ -1,0 +1,31 @@
+//方法：遍历链表，下一个节点值大于等于x，则在后面找到第一个小于x的节点，放在前面，继续遍历
+//注意：实际操作时在链表前面加了一个空的头结点，便于后面操作的一致性，操作完成后再删除该节点。
+class Solution {
+public:
+	ListNode* partition(ListNode* head, int x) {
+		ListNode* pointer = head;
+		head = new ListNode(NULL);
+		head->next = pointer;
+		pointer = head;
+		while (pointer->next) {
+			if (pointer->next->val >= x) {
+				ListNode* newPointer = pointer->next;
+				while (newPointer->next != NULL&&newPointer->next->val >= x) {
+					newPointer = newPointer->next;
+				}
+				if (!newPointer->next)
+					break;
+				ListNode* temp1 = newPointer->next;
+				newPointer->next = newPointer->next->next;
+				ListNode* temp2 = pointer->next;
+				pointer->next = temp1;
+				pointer->next->next = temp2;
+			}
+			pointer = pointer->next;
+		}
+		pointer = head->next;
+		delete(head);
+		head = pointer;
+		return head;
+	}
+};
