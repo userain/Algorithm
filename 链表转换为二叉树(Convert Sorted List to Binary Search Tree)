@@ -1,0 +1,22 @@
+//方法:利用递归，每次之转换链表的中间节点
+class Solution {
+public:
+	TreeNode* sortedListToBST(ListNode* head) {
+		TreeNode* root = NULL;
+		convertMiddleNode(head, NULL, root);
+		return root;
+	}
+	void convertMiddleNode(ListNode* start, ListNode* end, TreeNode* &root) {
+		if (start == end)
+			return;
+		ListNode* slowPointer = start;
+		ListNode* fastPointer = start;
+		while (fastPointer != end&&fastPointer->next != end) {        //利用快慢指针寻找链表的中间节点
+			slowPointer = slowPointer->next;
+			fastPointer = fastPointer->next->next;
+		}
+		root = new TreeNode(slowPointer->val);        //将中间节点转换为二叉树的节点
+		convertMiddleNode(start, slowPointer, root->left);      //递归转换链表的左边部分
+		convertMiddleNode(slowPointer->next, end, root->right); //递归转换链表的右边部分
+	}
+};
