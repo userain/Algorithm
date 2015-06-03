@@ -1,0 +1,61 @@
+//方法：加上头结点，依次判断能不能分组，节点数目可以成为一组，将改组进行反转，在往后移动，判断后面，往复操作，最后删除头结点
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+	ListNode* reverseKGroup(ListNode* head, int k) {
+		if (head == NULL || head->next == NULL)
+			return head;
+		if (k <= 0)
+			return head;
+		ListNode *pointer = new ListNode(NULL);
+		pointer->next = head;
+		head = pointer;
+		pointer = head;
+		while (1) {
+			bool reverseFlag = true;
+			ListNode* tempPointer = pointer;
+			for (int i = 0;i < k;++i) {         //判断节点个数是否足够
+				if (tempPointer->next == NULL) {
+					reverseFlag = false;
+					break;
+				}
+				tempPointer = tempPointer->next;
+			}
+			if (!reverseFlag)           //不足够则跳出循环
+				break;
+			ListNode* temp = pointer->next; 
+			reverse(pointer, tempPointer->next);    //足够则反转
+			pointer = temp;
+		}
+		pointer = head->next;
+		delete(head);
+		head = pointer;
+		return head;
+		
+	}
+	//这里的反转函数写的不好，假如要反转12345中的23，则传入的是1和4的指针
+	void reverse(ListNode* prePointer,ListNode* end) {
+		if (prePointer->next == end||prePointer->next->next == end)
+			return;
+
+		ListNode* before = prePointer->next;
+		ListNode* pointer = prePointer->next->next;
+		while (1) {
+			ListNode* temp = pointer->next;
+			pointer->next = before;
+			before = pointer;
+			if (temp == end)
+				break;
+			pointer = temp;
+		}
+		prePointer->next->next = end;
+		prePointer->next = pointer;
+	}
+};
