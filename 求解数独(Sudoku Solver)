@@ -1,0 +1,42 @@
+//方法：采用递归的暴力求解，回朔
+class Solution {
+public:
+	void solveSudoku(vector<vector<char>>& board) {
+		sudo(board, 0);
+	}
+	bool sudo(vector<vector<char>>& board, int position) {
+		int x = position / 9;
+		int y = position % 9;
+		if (position == 81)
+			return true;
+		if (board[x][y] == '.') {
+			for (int i = 1;i <= 9;++i) {        //1-9依次试一遍
+				board[x][y] = char(i + '0');
+				if (isValid(board, x, y) && sudo(board, position + 1))    //可以就返回true
+					return true;
+				board[x][y] = '.';      //不行就回朔为原来的值
+			}
+			return false;
+		}
+		else 
+			return sudo(board, position + 1);
+	}
+	bool isValid(vector<vector<char> > &board, int a, int b) {  
+        int i,j;  
+        for(i = 0; i < 9; i++)  
+            if(i != a && board[i][b] == board[a][b])  
+                return false;  
+  
+        for(j = 0; j < 9; j++)  
+            if(j != b && board[a][j] == board[a][b])  
+                return false;  
+  
+        int x = a/3*3;  
+        int y = b/3*3;  
+        for(i = 0; i < 3; i++)  
+            for(j = 0; j< 3; j++)  
+                if(x+i != a && y+j != b && board[x+i][y+j] == board[a][b])  
+                    return false;  
+        return true;  
+    }
+};
