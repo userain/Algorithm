@@ -1,0 +1,44 @@
+//方法：利用两个数组保存结果，needToFind保存总共每个字符需要包含多少个，hasToFind保存start和end指针之间每个字符已经发现了多少个，
+//利用count计算是否发现已经满足情况，当count满足情况时几计算当前区间内的字符串长度是否小于历史最小长度。
+//count自增的条件是例如当前字符为a，a已经发现了3个，但是a总共需要发现6个，这时是满足自增条件的，若前面已经发现了7个a，这时是不满足自增条件的
+class Solution {
+public:
+	string minWindow(string s, string t) {
+		if (s.empty())
+			return "";
+		if (t.empty())
+			return "";
+		int needToFind[256];
+		int hasToFind[256];
+		memset(needToFind, 0, 256 * sizeof(int));
+		memset(hasToFind, 0, 256 * sizeof(int));
+		for (int i = 0;i < t.size();++i)
+			++needToFind[t[i]];                             //先记录需要发现的每个字符的个数
+		int count = 0;
+		int minStart = 0, minLenth = s.size()+1;
+		int start = 0, end = -1;
+		while (true) {
+			if (count == t.size()) {                        //当count与总共需要发现的字符的个数相等时，表示找到区间
+				if ((end - start + 1) < minLenth) {           //判断与历史最小区间的大小情况
+					minStart = start;
+					minLenth = end - start + 1;
+				}
+				--hasToFind[s[start]];                //将start位置的字符的个数减一
+				if (hasToFind[s[start]]<needToFind[s[start]])     //若start位置的字符也是有效字符，此时count也减一
+					--count;
+				++start;                              //start向前一步
+			}
+			else {
+				++end;                          //没有找到区间，那么end向前一步
+				if (end >= s.size())            //若end已经到字符串尾部，则寻找结束
+					break;
+				if (hasToFind[s[end]]<needToFind[s[end]]) //若满足count的自增条件则自增，自增条件见程序头部描述
+					++count;
+				++hasToFind[s[end]];          //将end位置的字符的个数加一
+			}
+		}
+		if (minLenth == s.size() + 1)     //若从始至终没有找到有效区间，则返回""
+			return "";
+		return s.substr(minStart, minLenth);
+	}
+};
