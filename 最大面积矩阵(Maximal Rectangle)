@@ -43,7 +43,7 @@ private:
 		int maxErea = 0;
 		for (int i = 0;i<high.size();++i) {
 			if (highStack.empty()||high[i][endy] >= high[highStack.top()][endy])
-				highStack.push(i);
+				highStack.push(i);			//注意在栈中存储的是每一个直立方图的编号，而不是高度
 			else {
 				while (!highStack.empty()&&high[highStack.top()][endy]>high[i][endy]) {
 					int t = highStack.top();
@@ -54,7 +54,7 @@ private:
 				highStack.push(i);
 			}
 		}
-		
+		//最后还要检查栈是否为空
 		while (!highStack.empty()) {
 			int t = highStack.top();
 			highStack.pop();
