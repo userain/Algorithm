@@ -1,0 +1,67 @@
+//方法：以每一列作为一个底，统计向左为1的最大高度，将该问题看做为最大直立方图矩阵问题
+//这个题难度确实大，需要好好分析，学习
+class Solution {
+public:
+	int maximalRectangle(vector<vector<char>>& matrix) {
+		if (matrix.size() == 0)
+			return 0;
+		if (matrix[0].size() == 0)
+			return 0;
+		int maxErea = 0;
+		vector<vector<int>> histHigh;
+		histHigh.resize(matrix.size());
+		for (int i = 0;i < histHigh.size();++i) {
+			for (int j = 0;j < matrix[i].size();++j) {
+				histHigh[i].push_back(0);
+			}
+		}
+		for (int endx = 0;endx < matrix.size();++endx) {
+			for (int endy = 0; endy < matrix[0].size();++endy) {
+				if (matrix[endx][endy] == '0')
+					histHigh[endx][endy] = 0;
+				else {
+					if (endy == 0)
+						histHigh[endx][endy] = 1;
+					else
+						histHigh[endx][endy] = histHigh[endx][endy-1] + 1;
+				}
+			}
+		}
+		
+		for (int endy = 0;endy < histHigh[0].size();++endy) {
+			maxErea = max(maxErea, maxRectangleHistogram(endy,histHigh));
+		}
+		
+		return maxErea;
+	}
+private:
+//最大直立方图矩阵问题
+	int maxRectangleHistogram(int endy,const vector<vector<int>> &high) {
+		if (high.size() == 0)
+			return 0;
+		stack<int> highStack;
+		int maxErea = 0;
+		for (int i = 0;i<high.size();++i) {
+			if (highStack.empty()||high[i][endy] >= high[highStack.top()][endy])
+				highStack.push(i);
+			else {
+				while (!highStack.empty()&&high[highStack.top()][endy]>high[i][endy]) {
+					int t = highStack.top();
+					highStack.pop();
+					int width = highStack.empty() ? i : (i - highStack.top() - 1);
+					maxErea = max(maxErea, width*high[t][endy]);
+				}
+				highStack.push(i);
+			}
+		}
+		
+		while (!highStack.empty()) {
+			int t = highStack.top();
+			highStack.pop();
+			int width = highStack.empty() ? high.size() : (high.size() - highStack.top() - 1);
+			maxErea = max(maxErea, width*high[t][endy]);
+		}
+		
+		return maxErea;
+	}
+};
