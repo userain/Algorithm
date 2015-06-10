@@ -1,0 +1,41 @@
+//方法：以每一个点为定点，计算出该点与其它点的斜率，斜率想等则表示在同一条线上，利用hash表存储斜率
+//注意：这个题目的意外情况比较多，要特别注意1.除数为0的情况，此时斜率无穷大；2.若出现与固定点相同的点的情况，这时要统计这些点的数目
+3.当只有vector中全为相同点，这样会导致hash表中没有数据的情况；4.要注意浮点数相除判断等于不能直接相等，这里只取浮点数前4位进行判断
+class Solution {
+public:
+	int maxPoints(vector<Point>& points) {
+		if (points.size() == 0)
+			return 0;
+		int maxNums = 0;
+		for (int i = 0;i < points.size();++i) {
+			map<double, int> myHashMap;
+			int duplicate = 0;	
+			for (int j = 0;j < points.size();++j) {
+				if (j == i)
+					continue;
+				double grad = 0;		
+				if (points[j].x == points[i].x&&points[j].y == points[i].y)
+					++duplicate;
+				else {
+					if (points[j].x == points[i].x&&points[j].y != points[i].y)
+						grad = INT_MAX;
+					else {
+						grad = ((float)(points[j].y - points[i].y) / (float)(points[j].x - points[i].x));
+						grad = ((int)(grad * 10000) / 10000.0);	//这里只取float的小数部分前4位
+					}
+					if (myHashMap.find(grad) == myHashMap.end())
+						myHashMap[grad] = 1;
+					else
+						++myHashMap[grad];
+				}
+			}
+			if (myHashMap.empty())
+				maxNums = max(maxNums, duplicate);
+			else {
+				for (map<double, int>::iterator it = myHashMap.begin();it != myHashMap.end();++it)
+					maxNums = max(it->second + duplicate, maxNums);
+			}
+		}
+		return maxNums+1;		//	最后计数的时候还应该算上自己
+	}
+};
