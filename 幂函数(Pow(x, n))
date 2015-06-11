@@ -1,0 +1,23 @@
+//方法：根据n的二进制位，来求解
+//注意：当n为INT_MIN时，其负值已经超出了int的范围，值得注意
+class Solution {
+public:
+	double myPow(double x, int n) {
+		if (n == 0)
+			return 1.0;
+		if (n < 0){
+            if(n == INT_MIN)
+                return 1/(myPow(x, -(n+1))*x);
+            else
+                return 1/(myPow(x,-n));
+        }
+		double sum = 1;
+		while (n > 0){
+			if ((n & 1) > 0)
+				sum = sum * x;
+			x = x*x;
+			n = n >> 1;
+		}
+		return sum;
+	}
+};
