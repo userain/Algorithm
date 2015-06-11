@@ -1,0 +1,19 @@
+//方法：二分法在【0，x】范围内寻找，找到返回结果，没找到返回较小的那一个离的近的数
+class Solution {
+public:
+	int mySqrt(int x) {
+		unsigned long long int start = 0;
+		unsigned long long int end = x;
+		unsigned long long int middle = 0;
+		while (start<=end){
+			middle = (start + end) / 2;
+			if ((middle*middle) == x)
+				return middle;
+			else if ((middle*middle) < x)
+				start = middle+1;
+			else
+				end = middle-1;
+		}
+		return end;     //没找到返回较小的那一个离的近的数
+	}
+};
