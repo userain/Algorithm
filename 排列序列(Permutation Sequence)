@@ -1,0 +1,34 @@
+//方法：先利用一个数组flag表示那个数字被使用了，pointer开始指向第一个没有使用的数字，n个数字的第k个序列的第一个数字，
+//就是将pointer指针向后移动k/((n-1)!)位，k = k%((n-1)!)这里的移动是指向每次移动指向的是下一个未被使用的数字，此题也可以用递归做
+//注意：在程序开始时要将k先减一
+class Solution {
+public:
+	string getPermutation(int n, int k) {
+		string result;
+		int flag[10];     
+		memset(flag, 0, 10*sizeof(int));  
+		--k;
+		for (int i = 0; i < n; ++i){
+			int pointer = 1;    
+			while (flag[pointer])   //先将pointer指向第一个未被使用的数字
+				++pointer;
+			int temp = k / jieCheng(n - i-1);
+			k = k%jieCheng(n -i- 1);
+			while (temp--){         //将pointer向后移动temp步
+				int nextPointer = pointer+1;
+				while (flag[nextPointer])
+					++nextPointer;
+				pointer = nextPointer;
+			}
+			flag[pointer] = 1;      //将flag第pointer个置为，表示使用
+			result = result + (char)(pointer + '0');    //加入使用的数字到结果中
+		}
+		return result;
+
+	}
+	int jieCheng(int n){      //阶乘函数
+		if (n==0)
+			return 1;
+		return n*jieCheng(n - 1);
+	}
+};
