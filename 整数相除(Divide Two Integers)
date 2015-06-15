@@ -1,0 +1,33 @@
+//方法：采用位运算，将除数不停左移，直到移动n次为q，大于被除数p，则result+(n-1)，更新被除数为p-q，重复上述过程，直至被除数小于原始除数
+//注意：注意这里要longlongint防止超出范围
+//特例：就是-2147483648/-1的情况，此时结果为2147483648，但int型表示范围为（-2147483648，2147483647），溢出，此时返回INT_MAX
+class Solution {
+public:
+	int divide(int dividend,int divisor) {
+		long long int myDivident = dividend;
+		long long int myDivisor = divisor;    //这里要用longlongint先将被除数和除数先表示，因为-2147483648是无法取绝对值的，其值超出了int的范围
+		if (myDivident == 0)
+			return 0;
+		bool fushuFlag = false;
+		if ((myDivident < 0 && myDivisor>0) || (myDivident > 0 && myDivisor < 0))
+			fushuFlag = true;
+		myDivident = abs(myDivident);
+		myDivisor = abs(myDivisor);
+		long long int  result = 0;
+		while (myDivident >= myDivisor){
+			long long int sum = myDivisor;
+			long long int count = 0;
+			while (sum <= myDivident){
+				if (count == 0)
+					count = 1;
+				else
+					count = count << 1;
+				sum = sum << 1;
+			}
+			result = result + count;
+			myDivident = myDivident - (sum >> 1);
+		}
+		result = fushuFlag ? (-result) : result;
+		return result>INT_MAX?INT_MAX:result;
+	}
+};
