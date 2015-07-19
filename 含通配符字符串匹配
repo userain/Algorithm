@@ -1,0 +1,67 @@
+/*
+字符串匹配问题，给定两个字符串，求字符串2，在字符串1中的最先匹配结果。字符串2中可以存在'*'符号，且该符号可以代表任意字符，即字符串2中存在通配符。
+e.g. 输入：abccd, a*cd    输出：abccd
+*/
+//这里采用的思路是将纯粹的无通配符的匹配做成一个函数，在模式串中寻找*号符，然后在输入符字符串中寻找每两个*号符之间的字符串
+//注意：本题的难点在于对于字符串abccd 模式a*cd 的匹配，若一个一个扫描，当扫描到*号时，由于下一个时c，而字符串中有两个c，后面的c才是正确的选择，因此比较难于处理，利用这种思路可以巧妙的躲过这个问题
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+void chuPiPei(string &input, int inputStrValidStartIndex,string &moshiStr,int & start,int &end){
+//inputStrValidStartIndexn表示的是input字符串中有效的起始位置，例如input="baabc",moshiStr = "a*bc",那么在前面第一次找a时，a在位置1找到，那么后面找bc必须在1以后的位置找
+	for (int i = inputStrValidStartIndex; i < input.size(); ++i){
+		int pointer1 = i;
+		int pointer2 = 0;
+		while (pointer1 < input.size() && pointer2 < moshiStr.size() && input[pointer1] == moshiStr[pointer2]){
+			++pointer1;
+			++pointer2;
+		}
+		if (pointer2 == moshiStr.size()){//匹配完成
+			start = i;
+			end = pointer1-1;
+			return;
+		}
+	}
+	//否则没找到,start和end都是-1
+	start = -1;
+	end = -1;
+}
+void piPei(string input, string moshiStr){
+	if (moshiStr == "*"){
+		cout << input << endl;
+		return;
+	}
+	int lastxingIndex = -1;     //初始*号为-1，即在初始的模式串开头添加一个*号
+	int start = INT_MAX, end = -1;    //start和end用于存储查找子串的结果
+	int tempStart, tempEnd;
+	for (int i = 0; i < moshiStr.size(); ++i){
+		if (moshiStr[i] == '*'&&(i-lastxingIndex)>0){     //若为*，在input中寻找两个*之间的字符
+			chuPiPei(input, end + 1, moshiStr.substr(lastxingIndex + 1, i - lastxingIndex-1), tempStart, tempEnd);    
+			if (tempStart == -1){
+				cout << "没找到" << endl;
+				return;
+			}
+			start = min(start, tempStart);    //更新start和end
+			end = max(end, tempEnd);
+			lastxingIndex = i;
+		}
+	}
+	if (lastxingIndex == (moshiStr.size() - 1))   //若最后一个位置是星号个，则直接匹配剩余的字符串
+		cout << input.substr(start) << endl;
+	else{   //若最后一个位置不是星号，那么还需在寻找一次模式串中最后一段的字符串，即在模式串的最后也相当于要添加一个字符串
+		chuPiPei(input, end + 1, moshiStr.substr(lastxingIndex + 1, moshiStr.size()-1 - lastxingIndex), tempStart, tempEnd);
+		if (tempStart == -1){
+			cout << "没找到" << endl;
+			return;
+		}
+		start = min(start, tempStart);
+		end = max(end, tempEnd);
+		cout << input.substr(start, end - start + 1) << endl;
+	}
+}
+int main(){
+	
+	piPei("aabccd", "a*cd");
+	return 0;
+}
