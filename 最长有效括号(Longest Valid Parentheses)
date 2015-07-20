@@ -1,0 +1,42 @@
+//方法：先用一个数组存储匹配结果，然后再扫描一边匹配结果，记录最长连续匹配成功的长度
+class Solution {
+public:
+	int longestValidParentheses(string s) {
+		if (s.size() == 0)
+			return 0;
+		bool continueFlag = false;
+		stack<pair<char, int>> myStack;
+		int count = 0;
+		int maxCount = 0;
+		vector<bool> piPei;
+		for (int i = 0; i < s.size(); ++i)
+			piPei.push_back(false);
+		for (int i = 0; i < s.size(); ++i){
+			if (myStack.empty()){
+				myStack.push(pair<char, int>(s[i], i));
+			}
+			else if (myStack.top().first == '('&&s[i] == ')'){
+				piPei[i] = true;
+				piPei[myStack.top().second] = true;
+				myStack.pop();
+			}
+			else
+				myStack.push(pair<char, int>(s[i], i));
+		}
+		for (int i = 0; i < piPei.size(); ++i){
+			if (piPei[i]){
+				if (continueFlag){
+					++count;
+				}
+				else{
+					count = 1;
+					continueFlag = true;
+				}
+				maxCount = max(maxCount, count);
+			}
+			else
+				continueFlag = false;
+		}
+		return maxCount;
+	}
+};
