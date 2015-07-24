@@ -1,0 +1,33 @@
+//详细请见：http://blog.csdn.net/beiyetengqing/article/details/8105180
+class Solution {
+public:
+	int minDistance(string word1, string word2) {
+		if (word1.size() == 0)
+			return word2.size();
+		if (word2.size() == 0)
+			return word1.size();
+		vector<vector<int>> result;
+		int len1 = word1.size();
+		int len2 = word2.size();
+		result.resize(len1+1);
+		for (int i = 0; i <= len1; ++i){
+			result[i].resize(len2+1);
+		}
+		for (int j = 0; j <= len2; ++j){
+			result[0][j] = j;
+		}
+		for (int j = 0; j <= len1; ++j){
+			result[j][0] = j;
+		}
+		for (int i = 1; i <= len1; ++i){
+			for (int j = 1; j <= len2; ++j){
+				if (word1[i-1] == word2[j-1])
+					result[i][j] = result[i - 1][j - 1];
+				else{
+					result[i][j] = min(min(result[i - 1][j], result[i][j - 1]), result[i - 1][j - 1]) + 1;
+				}
+			}
+		}
+		return result[len1][len2];
+	}
+};
