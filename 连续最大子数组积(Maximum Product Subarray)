@@ -1,0 +1,22 @@
+//方法：因为负数和负数相乘为正，因此要利用两个变量保存局部最大积和局部最小积；
+class Solution {
+public:
+	int maxProduct(vector<int>& nums) {
+		int len = nums.size();
+		if (len <= 0)
+			return 0;
+		
+		int maxLocal = nums[0];
+		int minLocal = nums[0];
+		int maxGlobal = nums[0];
+		int maxLocalCopy;
+		for (int i = 1; i < len; ++i){
+			maxLocalCopy = maxLocal;        //这里一定要先把maxLocal保存，因为在后面会更新maxLocal；
+			maxLocal = max(max(maxLocal*nums[i], nums[i]), minLocal*nums[i]);     maxLocal在maxLocal*nums[i], nums[i]，minLocal*nums[i]中取最大的
+
+			minLocal = min(min(minLocal*nums[i], nums[i]), maxLocalCopy*nums[i]); minLocal同理
+			maxGlobal = max(maxLocal, maxGlobal);
+		}
+		return maxGlobal;
+	}
+};
