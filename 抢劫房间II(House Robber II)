@@ -1,0 +1,30 @@
+class Solution {
+public:
+	int rob(vector<int>& nums) {
+		int len = nums.size();
+		if (len == 0)
+			return 0;
+		if (len == 1)
+			return nums[0];
+		if (len == 2)
+			return max(nums[0], nums[1]);
+		int prePreMax = 0;
+		int preMax = nums[1];
+		int max1 = 0;
+		int temp = 0;
+		for (int i = 2; i < len; ++i){
+			temp = max(prePreMax + nums[i], preMax);
+			prePreMax = preMax;
+			preMax = temp;
+		}
+		max1 = preMax;
+		prePreMax = 0;
+		preMax = nums[0];
+		for (int i = 1; i < (len - 1); ++i){
+			temp = max(prePreMax + nums[i], preMax);
+			prePreMax = preMax;
+			preMax = temp;
+		}
+		return max(max1, preMax);	
+	}
+};
