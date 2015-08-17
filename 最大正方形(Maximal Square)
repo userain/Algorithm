@@ -1,0 +1,25 @@
+//方法：动态规划 以当前点(x,y) = '1' 为右下角的最大正方形的边长f(x,y) = min( f(x-1,y), f(x,y-1), f(x-1,y-1)) + 1.
+//理解：当f(x-1,y), f(x,y-1), f(x-1,y-1)相等且(x,y) = '1' 则构成新的更大的正方形
+class Solution {
+public:
+	int maximalSquare(vector<vector<char>>& matrix) {
+		int len1 = matrix.size();
+		if (len1 == 0)
+			return 0;
+		int len2 = matrix[0].size();
+		vector<int> temp(len2+1, 0);
+		vector<vector<int>> memory(len1+1,temp);
+		int maxResult = 0;
+		for (int i = 0; i < len1; ++i){
+			for (int j = 0; j < len2; ++j){
+				if (matrix[i][j] == '0')
+					memory[i + 1][j + 1] = 0;
+				else{
+					memory[i + 1][j + 1] = min(min(memory[i][j+1], memory[i+1][j]), memory[i][j])+1;
+				}
+				maxResult = max(maxResult, memory[i + 1][j + 1]);
+			}
+		}
+		return maxResult*maxResult;
+	}
+};
