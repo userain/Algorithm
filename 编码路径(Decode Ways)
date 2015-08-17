@@ -1,0 +1,23 @@
+//方法：带约束的费内巴切数列,memory[i]代表从i位置到结尾的字符串的编码方法个数
+//约束条件：若s【i】为0，则s【i】不能被解释，只能在这里选择两个字符解释
+class Solution {
+public:
+	int numDecodings(string s) {
+		int len = s.size();
+		if (len == 0)
+			return 0;
+		vector<int> memory(len+1, 0);
+		memory[len] = 1;
+		string str;
+		for (int i = len-1; i >= 0; --i){
+			if (s[i] != '0'){
+				memory[i] = memory[i + 1];
+			}
+			str = s.substr(i,2);
+			if (str.size() == 2&&str <= "26" && str>="10"){
+				memory[i] = memory[i] + memory[i + 2];
+			}
+		}
+		return memory[0];
+	}
+};
