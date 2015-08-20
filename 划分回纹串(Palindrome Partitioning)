@@ -1,0 +1,44 @@
+//方法：利用矩阵存储一个串是不是回纹串，然后dfs
+class Solution {
+public:
+	vector<vector<string>> partition(string s) {
+		vector<vector<string>> result;
+		int len = s.size();
+		if (len == 0)
+			return result;
+		vector<bool> temp(len, false);
+		vector<vector<bool>> memory(len,temp);
+		generateTable(memory, s);
+		vector<string> tempStr;
+		dfs(memory, result, tempStr, s, 0);
+		return result;
+	}
+	void dfs(vector<vector<bool>>&memory,vector<vector<string>>&result,vector<string>tempStr,string &s,int start){
+		if (start == memory.size()){
+			result.push_back(tempStr);
+			return;
+		}
+		
+		for (int end = start; end < memory.size(); ++end){
+			if (memory[start][end]){
+				tempStr.push_back(s.substr(start, end - start + 1));
+				dfs(memory, result, tempStr, s, end + 1);
+				tempStr.pop_back();
+			}
+		}
+	}
+	void generateTable(vector<vector<bool>> &memory,string &s){
+		for (int lenth = 0; lenth < memory.size(); ++lenth){
+			for (int start = 0; start + lenth < memory.size(); ++start){
+				if (lenth == 0)
+					memory[start][start] = true;
+				else if(lenth == 1){
+					memory[start][start + lenth] = (s[start] == s[start + lenth]);
+				}
+				else{
+					memory[start][start + lenth] = (memory[start + 1][start + lenth - 1] && (s[start] == s[start + lenth]));
+				}
+			}
+		}
+	}
+};
