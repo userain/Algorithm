@@ -1,0 +1,11 @@
+class Solution {
+public:
+	bool isValidBST(TreeNode* root) {
+		return check(root, pow(-10, 11), pow(10, 11));      //由于leetcode增加了两个测试用例，只有一个根节点，值为INT_MIN和INT_MAX，因此这里要用double且要用更大的值
+	}
+	bool check(TreeNode* root, double leftValue, double rightValue){
+		if (!root)
+			return true;
+		return root->val > leftValue&&root->val < rightValue&&check(root->left, leftValue, root->val) && check(root->right, root->val, rightValue);
+	}
+};
